@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/Source/EchoesOfShinobi/Public",
+                "${workspaceFolder}/Source/EchoesOfShinobi/Public/**",
+                "${workspaceFolder}/Source/EchoesOfShinobi/Private",
+                "${workspaceFolder}/Source/EchoesOfShinobi/Private/**",
+                "${workspaceFolder}/Source/EchoesOfShinobi"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "WITH_ENGINE=1",
+                "ECHOESOFSHINOBI_API="
+            ],
+            "compilerPath": "",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
