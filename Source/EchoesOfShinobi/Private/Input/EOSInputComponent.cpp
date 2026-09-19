@@ -1,1 +1,1 @@
-#include "Input/EOSInputComponent.h"
+#include "../../Public/Input/EOSInputComponent.h"

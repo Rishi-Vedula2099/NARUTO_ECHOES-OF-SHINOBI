@@ -1,5 +1,5 @@
-#include "Character/EOSCharacterBase.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Character/EOSCharacterBase.h"
+#include "../../EchoesOfShinobi.h"
 
 AEOSCharacterBase::AEOSCharacterBase()
 {

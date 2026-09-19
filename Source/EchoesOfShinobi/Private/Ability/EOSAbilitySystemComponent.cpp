@@ -1,5 +1,5 @@
-#include "Ability/EOSAbilitySystemComponent.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Ability/EOSAbilitySystemComponent.h"
+#include "../../EchoesOfShinobi.h"
 
 UEOSAbilitySystemComponent::UEOSAbilitySystemComponent()
 {
