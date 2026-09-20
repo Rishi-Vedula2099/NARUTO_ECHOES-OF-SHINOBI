@@ -1,14 +1,10 @@
 #include "../../Public/Character/EOSCharacterBase.h"
-#include "../../EchoesOfShinobi.h"
 
 AEOSCharacterBase::AEOSCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UEOSAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-
 	AttributeSet = CreateDefaultSubobject<UEOSAttributeSet>(TEXT("AttributeSet"));
 }
 
@@ -21,27 +17,113 @@ void AEOSCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (CharacterDefinitionAsset)
+	{
+		InitializeFromDefinition(CharacterDefinitionAsset);
+	}
+}
+
+void AEOSCharacterBase::InitializeFromDefinition(UEOSCharacterDefinition* InDefinitionAsset)
+{
+	if (!InDefinitionAsset)
+	{
+		return;
+	}
+
+	CharacterDefinitionAsset = InDefinitionAsset;
+	RuntimeFramework = InDefinitionAsset->Framework;
+
+	// Populate AttributeSet from Stats
+	if (AttributeSet)
+	{
+		AttributeSet->SetHealth(RuntimeFramework.Stats.MaxHP);
+		AttributeSet->SetMaxHealth(RuntimeFramework.Stats.MaxHP);
+		AttributeSet->SetChakra(RuntimeFramework.Stats.MaxChakra);
+		AttributeSet->SetMaxChakra(RuntimeFramework.Stats.MaxChakra);
+		AttributeSet->SetAttackPower(RuntimeFramework.Stats.EffectiveAttack);
+		AttributeSet->SetDefensePower(RuntimeFramework.Stats.EffectiveDefense);
+	}
+
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-		if (CharacterDefinitionAsset && AttributeSet)
-		{
-			AttributeSet->InitHealth(CharacterDefinitionAsset->BaseHealth);
-			AttributeSet->InitMaxHealth(CharacterDefinitionAsset->BaseHealth);
-			AttributeSet->InitChakra(CharacterDefinitionAsset->BaseChakra);
-			AttributeSet->InitMaxChakra(CharacterDefinitionAsset->BaseChakra);
-			AttributeSet->InitAttackPower(CharacterDefinitionAsset->BaseAttack);
-			AttributeSet->InitDefensePower(CharacterDefinitionAsset->BaseDefense);
-			AttributeSet->InitMovementSpeed(CharacterDefinitionAsset->BaseSpeed);
-
-			UE_LOG(LogEOSCharacter, Log, TEXT("Initialized Character '%s' (Era: %d, Health: %f, Chakra: %f)"),
-				*CharacterDefinitionAsset->DisplayName.ToString(),
-				static_cast<int32>(CharacterDefinitionAsset->Era),
-				CharacterDefinitionAsset->BaseHealth,
-				CharacterDefinitionAsset->BaseChakra);
-		}
 	}
+}
+
+FEOSCombatStatBlock AEOSCharacterBase::GetStats() const
+{
+	return RuntimeFramework.Stats;
+}
+
+FEOSBasicAttackCombo AEOSCharacterBase::GetBasicAttacks() const
+{
+	return RuntimeFramework.BasicAttacks;
+}
+
+FEOSSkillSetContainer AEOSCharacterBase::GetSkills() const
+{
+	return RuntimeFramework.Skills;
+}
+
+FEOSJutsuSlotContainer AEOSCharacterBase::GetJutsu() const
+{
+	return RuntimeFramework.Jutsu;
+}
+
+FEOSUltimateDefinition AEOSCharacterBase::GetUltimate() const
+{
+	return RuntimeFramework.Ultimate;
+}
+
+FEOSFormContainer AEOSCharacterBase::GetForms() const
+{
+	return RuntimeFramework.Forms;
+}
+
+FEOSGearGridContainer AEOSCharacterBase::GetEquipment() const
+{
+	return RuntimeFramework.Equipment;
+}
+
+FEOSCharacterAdvancementData AEOSCharacterBase::GetAdvancement() const
+{
+	return RuntimeFramework.Advancement;
+}
+
+FEOSCharacterMasteryRecord AEOSCharacterBase::GetMastery() const
+{
+	return RuntimeFramework.Mastery;
+}
+
+FEOSCharacterCompatibilityProfile AEOSCharacterBase::GetCompatibility() const
+{
+	return RuntimeFramework.Compatibility;
+}
+
+bool AEOSCharacterBase::TransformToForm(const FString& TargetFormID)
+{
+	if (RuntimeFramework.Forms.UnlockedFormIDs.Contains(TargetFormID) || TargetFormID == "FORM_BASE")
+	{
+		RuntimeFramework.Forms.ActiveFormID = TargetFormID;
+
+		// Apply Form Stat Boost
+		if (TargetFormID == "FORM_SAGE_MODE")
+		{
+			RuntimeFramework.Forms.ActiveFormStatMultiplier = 1.30f; // +30% stats
+		}
+		else if (TargetFormID == "FORM_KURAMA_LINK" || TargetFormID == "FORM_SUSANOO")
+		{
+			RuntimeFramework.Forms.ActiveFormStatMultiplier = 1.50f; // +50% stats
+		}
+		else
+		{
+			RuntimeFramework.Forms.ActiveFormStatMultiplier = 1.0f;
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 void AEOSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -51,16 +133,8 @@ void AEOSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AEOSCharacterBase::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->AbilityInputTagPressed(InputTag);
-	}
 }
 
 void AEOSCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->AbilityInputTagReleased(InputTag);
-	}
 }

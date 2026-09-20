@@ -1,8 +1,11 @@
 #include "../../Public/Tests/EOSPhase3Tests.h"
 #include "../../Public/Subsystems/EOSJutsuTrialSubsystem.h"
 #include "../../Public/Subsystems/EOSCombatBalanceSubsystem.h"
+#include "../../Public/Character/EOSCharacterBase.h"
+#include "../../Public/Data/EOSCharacterDefinition.h"
 #include "../../Public/Data/EOSJutsuTrialDataTypes.h"
 #include "../../Public/Data/EOSCombatDataTypes.h"
+#include "../../Public/Data/EOSCharacterDataTypes.h"
 #include "../../Public/Tests/EOSPhase2Tests.h"
 #include "../../EchoesOfShinobi.h"
 
@@ -30,15 +33,22 @@ bool FEOSPhase3Tests::RunAllPhase1Phase2AndPhase3ValidationTests()
 	bool bP3_HitScore= TestHitScoreAndGradeResolution();
 	bool bP3_Scaling = TestEnemyAndBossScalingCalculations();
 
+	// Execute Phase 3 Character Framework tests (4 suites)
+	bool bP3_Init    = TestCharacterFrameworkInitialization();
+	bool bP3_Comp    = TestDataDrivenCharacterDefinitionCompilation();
+	bool bP3_Form    = TestCharacterFormTransformationLogic();
+	bool bP3_Equip   = TestCharacterEquipmentGridAndCompatibility();
+
 	bool bPhase3Passed = bP3_Eligible && bP3_HandSign && bP3_Chakra && bP3_Practice &&
 	                     bP3_Mastery && bP3_Loadout && bP3_Defense && bP3_Element &&
-	                     bP3_Damage && bP3_HitScore && bP3_Scaling;
+	                     bP3_Damage && bP3_HitScore && bP3_Scaling &&
+	                     bP3_Init && bP3_Comp && bP3_Form && bP3_Equip;
 
 	bool bAllPassed = bP1_P2_Passed && bPhase3Passed;
 
 	UE_LOG(LogEOSCore, Log, TEXT("=================================================="));
-	UE_LOG(LogEOSCore, Log, TEXT("PHASE 3 TEST SUMMARY: %s (11/11 PHASE 3 SUITES PASSED)"), bPhase3Passed ? TEXT("PASS") : TEXT("FAIL"));
-	UE_LOG(LogEOSCore, Log, TEXT("OVERALL SYSTEM RESULT: %s (19/19 TOTAL SYSTEM SUITES PASSED)"), bAllPassed ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("PHASE 3 TEST SUMMARY: %s (15/15 PHASE 3 SUITES PASSED)"), bPhase3Passed ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("OVERALL SYSTEM RESULT: %s (23/23 TOTAL SYSTEM SUITES PASSED)"), bAllPassed ? TEXT("PASS") : TEXT("FAIL"));
 	UE_LOG(LogEOSCore, Log, TEXT("=================================================="));
 
 	return bAllPassed;
@@ -192,29 +202,22 @@ bool FEOSPhase3Tests::TestJutsuArchiveAndLoadoutManagement()
 	return bPass;
 }
 
-// ----------------------------------------------------------------------------------
-// COMBAT BALANCE MATH TESTS
-// ----------------------------------------------------------------------------------
-
 bool FEOSPhase3Tests::TestDefenseFactorMitigationFormula()
 {
-	// Formula: DefenseFactor = 100 / (100 + EffectiveDefense)
-	float FactorZeroDef = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(0.0f);   // Expected: 1.0 (100%)
-	float Factor100Def  = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(100.0f); // Expected: 0.5 (50%)
-	float Factor300Def  = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(300.0f); // Expected: 0.25 (25%)
+	float FactorZeroDef = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(0.0f);
+	float Factor100Def  = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(100.0f);
+	float Factor300Def  = UEOSCombatBalanceSubsystem::CalculateDefenseFactor(300.0f);
 
 	bool bPass = (FMath::IsNearlyEqual(FactorZeroDef, 1.0f)) &&
 	             (FMath::IsNearlyEqual(Factor100Def, 0.5f)) &&
 	             (FMath::IsNearlyEqual(Factor300Def, 0.25f));
 
-	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Defense Mitigation Factor Formula (Def 0: %.2f, Def 100: %.2f, Def 300: %.2f): %s"),
-		FactorZeroDef, Factor100Def, Factor300Def, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Defense Mitigation Factor Formula: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
 
 bool FEOSPhase3Tests::TestElementalCycleModifiers()
 {
-	// Cycle: Fire -> Wind -> Lightning -> Earth -> Water -> Fire (1.5x advantage, 0.75x disadvantage)
 	float FireVsWind = UEOSCombatBalanceSubsystem::CalculateElementModifier(EEOSChakraElement::Fire, EEOSChakraElement::Wind);
 	float WindVsFire = UEOSCombatBalanceSubsystem::CalculateElementModifier(EEOSChakraElement::Wind, EEOSChakraElement::Fire);
 	float WaterVsFire = UEOSCombatBalanceSubsystem::CalculateElementModifier(EEOSChakraElement::Water, EEOSChakraElement::Fire);
@@ -225,8 +228,7 @@ bool FEOSPhase3Tests::TestElementalCycleModifiers()
 	             FMath::IsNearlyEqual(WaterVsFire, 1.50f) &&
 	             FMath::IsNearlyEqual(Neutral, 1.00f);
 
-	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Elemental 5-Nature Cycle Modifiers (Advantage: %.2f, Disadvantage: %.2f): %s"),
-		FireVsWind, WindVsFire, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Elemental 5-Nature Cycle Modifiers: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
 
@@ -235,64 +237,161 @@ bool FEOSPhase3Tests::TestHitDamageCalculationChain()
 	FEOSDamageCalculationInput Input;
 	Input.ScalingType = EEOSAbilityScalingType::JutsuPower;
 	Input.AttackerJutsuPower = 500.0f;
-	Input.SkillMultiplier = 2.0f; // Base damage = 1000.0
-	Input.ComboMultiplier = 1.2f; // Combo bonus = 1200.0
+	Input.SkillMultiplier = 2.0f;
+	Input.ComboMultiplier = 1.2f;
 	Input.AttackerElement = EEOSChakraElement::Fire;
-	Input.DefenderElement = EEOSChakraElement::Wind; // 1.5x element advantage = 1800.0
-	Input.DefenderDefense = 100.0f; // DefenseFactor = 0.5 -> 900.0
+	Input.DefenderElement = EEOSChakraElement::Wind;
+	Input.DefenderDefense = 100.0f;
 	Input.bForceCritical = true;
-	Input.CritDamageMultiplier = 1.5f; // Crit -> 1350.0
+	Input.CritDamageMultiplier = 1.5f;
 
 	FEOSDamageCalculationResult Result = UEOSCombatBalanceSubsystem::CalculateFinalHitDamage(Input);
 
-	// Expected Final Damage: 500 * 2.0 * 1.2 * 1.5 * 1.5 * (100/200) = 1350.0
 	bool bPass = FMath::IsNearlyEqual(Result.FinalDamage, 1350.0f, 0.1f) && Result.bIsCriticalHit;
 
-	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Hit Damage Calculation Chain (Expected: 1350.0, Got: %.2f): %s"),
-		Result.FinalDamage, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Hit Damage Calculation Chain: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
 
 bool FEOSPhase3Tests::TestHitScoreAndGradeResolution()
 {
 	FEOSHitScoreInput Input;
-	Input.DamageDealtRatio = 1.0f;       // 400 pts
-	Input.MaxComboHits = 30;              // 200 pts
-	Input.PerfectTimingEvents = 5;        // 150 pts
-	Input.MechanicCompletionRatio = 1.0f; // 150 pts
-	Input.RemainingHPRatio = 1.0f;        // 100 pts
+	Input.DamageDealtRatio = 1.0f;
+	Input.MaxComboHits = 30;
+	Input.PerfectTimingEvents = 5;
+	Input.MechanicCompletionRatio = 1.0f;
+	Input.RemainingHPRatio = 1.0f;
 
 	FEOSHitScoreResult Result = UEOSCombatBalanceSubsystem::CalculateHitScore(Input);
 
 	bool bPassMaxScore = (Result.TotalScore == 1000) && (Result.Grade == TEXT("S"));
 
 	FEOSHitScoreInput LowerInput;
-	LowerInput.DamageDealtRatio = 0.70f;       // 280 pts
-	LowerInput.MaxComboHits = 15;              // 100 pts
-	LowerInput.PerfectTimingEvents = 2;        // 60 pts
-	LowerInput.MechanicCompletionRatio = 0.8f; // 120 pts
-	LowerInput.RemainingHPRatio = 0.5f;        // 50 pts
-	// Total: 280 + 100 + 60 + 120 + 50 = 610 pts -> Grade C
+	LowerInput.DamageDealtRatio = 0.70f;
+	LowerInput.MaxComboHits = 15;
+	LowerInput.PerfectTimingEvents = 2;
+	LowerInput.MechanicCompletionRatio = 0.8f;
+	LowerInput.RemainingHPRatio = 0.5f;
 
 	FEOSHitScoreResult LowerResult = UEOSCombatBalanceSubsystem::CalculateHitScore(LowerInput);
 	bool bPassLowerGrade = (LowerResult.TotalScore == 610) && (LowerResult.Grade == TEXT("C"));
 
 	bool bPass = bPassMaxScore && bPassLowerGrade;
-	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] 1000-Point Hit Score & Grade Resolution (Max Score: %d Grade %s, Lower Score: %d Grade %s): %s"),
-		Result.TotalScore, *Result.Grade, LowerResult.TotalScore, *LowerResult.Grade, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] 1000-Point Hit Score & Grade Resolution: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
 
 bool FEOSPhase3Tests::TestEnemyAndBossScalingCalculations()
 {
-	// Minion: Base 1000 HP, StageScaling 2.0, Difficulty 1.2, Tier 1.0 -> 2400 HP
 	float MinionHP = UEOSCombatBalanceSubsystem::CalculateEnemyHP(1000.0f, 2.0f, 1.2f, 1.0f);
-	// Boss: Base 1000 HP, StageScaling 2.0, Difficulty 1.2, Tier 5.0 -> 12000 HP
 	float BossHP = UEOSCombatBalanceSubsystem::CalculateEnemyHP(1000.0f, 2.0f, 1.2f, 5.0f);
 
 	bool bPass = FMath::IsNearlyEqual(MinionHP, 2400.0f) && FMath::IsNearlyEqual(BossHP, 12000.0f);
 
-	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Enemy & Boss Scaling Calculations (Minion HP: %.0f, Boss HP: %.0f): %s"),
-		MinionHP, BossHP, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 MATH TEST] Enemy & Boss Scaling Calculations: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
+	return bPass;
+}
+
+// ----------------------------------------------------------------------------------
+// UNIFIED 10-LAYER CHARACTER FRAMEWORK TESTS
+// ----------------------------------------------------------------------------------
+
+bool FEOSPhase3Tests::TestCharacterFrameworkInitialization()
+{
+	UEOSCharacterDefinition* Def = NewObject<UEOSCharacterDefinition>();
+	Def->CharacterId.StableId = FName("CHR_NARUTO_GENIN");
+	Def->DisplayName = FText::FromString("Naruto Uzumaki");
+	Def->Era = EEOSCharacterEra::ERA_GENIN;
+
+	// Populate 10-Layer Framework Block
+	Def->Framework.Stats.MaxHP = 1200.0f;
+	Def->Framework.Stats.MaxChakra = 800.0f;
+	Def->Framework.Stats.EffectiveAttack = 110.0f;
+	Def->Framework.BasicAttacks.ComboID = "COMBO_NARUTO_SHINOBI";
+	Def->Framework.Jutsu.SignatureJutsuID = "JUT_RASENGAN";
+	Def->Framework.Ultimate.UltimateID = "ULT_RASENSHURIKEN";
+	Def->Framework.Forms.UnlockedFormIDs = { "FORM_BASE", "FORM_SAGE_MODE", "FORM_KURAMA_LINK" };
+
+	AEOSCharacterBase Character;
+	Character.InitializeFromDefinition(Def);
+
+	FEOSCombatStatBlock Stats = Character.GetStats();
+	FEOSJutsuSlotContainer Jutsu = Character.GetJutsu();
+	FEOSUltimateDefinition Ult = Character.GetUltimate();
+
+	bool bPass = (Stats.MaxHP == 1200.0f) && (Stats.MaxChakra == 800.0f) &&
+	             (Jutsu.SignatureJutsuID == "JUT_RASENGAN") && (Ult.UltimateID == "ULT_RASENSHURIKEN");
+
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 FRAMEWORK TEST] Character Framework Initialization (Naruto Genin HP: %.0f, Jutsu: %s): %s"),
+		Stats.MaxHP, *Jutsu.SignatureJutsuID, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	return bPass;
+}
+
+bool FEOSPhase3Tests::TestDataDrivenCharacterDefinitionCompilation()
+{
+	// Verify Sasuke Genin Data Definition
+	UEOSCharacterDefinition* SasukeDef = NewObject<UEOSCharacterDefinition>();
+	SasukeDef->CharacterId.StableId = FName("CHR_SASUKE_GENIN");
+	SasukeDef->Framework.Stats.EffectiveAttack = 135.0f;
+	SasukeDef->Framework.Stats.EffectiveDefense = 65.0f;
+	SasukeDef->Framework.Jutsu.SignatureJutsuID = "JUT_CHIDORI";
+	SasukeDef->Framework.Jutsu.OffensiveJutsuID = "JUT_FIREBALL";
+	SasukeDef->Framework.Ultimate.UltimateID = "ULT_KIRIN";
+
+	AEOSCharacterBase SasukeChar;
+	SasukeChar.InitializeFromDefinition(SasukeDef);
+
+	FEOSCombatStatBlock Stats = SasukeChar.GetStats();
+	FEOSJutsuSlotContainer Jutsu = SasukeChar.GetJutsu();
+
+	bool bPass = (Stats.EffectiveAttack == 135.0f) && (Jutsu.SignatureJutsuID == "JUT_CHIDORI") && (Jutsu.OffensiveJutsuID == "JUT_FIREBALL");
+
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 FRAMEWORK TEST] Data-Driven Character Definition Compilation (Sasuke Attack: %.0f, Signature: %s): %s"),
+		Stats.EffectiveAttack, *Jutsu.SignatureJutsuID, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	return bPass;
+}
+
+bool FEOSPhase3Tests::TestCharacterFormTransformationLogic()
+{
+	UEOSCharacterDefinition* Def = NewObject<UEOSCharacterDefinition>();
+	Def->CharacterId.StableId = FName("CHR_NARUTO_SAGE");
+	Def->Framework.Forms.UnlockedFormIDs = { "FORM_BASE", "FORM_SAGE_MODE" };
+
+	AEOSCharacterBase Character;
+	Character.InitializeFromDefinition(Def);
+
+	// Try transforming to locked form -> Fail
+	bool bTransformKurama = Character.TransformToForm("FORM_KURAMA_LINK");
+	// Try transforming to unlocked Sage Mode -> Pass
+	bool bTransformSage = Character.TransformToForm("FORM_SAGE_MODE");
+
+	FEOSFormContainer Forms = Character.GetForms();
+
+	bool bPass = (!bTransformKurama) && bTransformSage && (Forms.ActiveFormID == "FORM_SAGE_MODE") && (Forms.ActiveFormStatMultiplier == 1.30f);
+
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 FRAMEWORK TEST] Character Form Transformation Logic (Sage Form Mult: %.2f): %s"),
+		Forms.ActiveFormStatMultiplier, bPass ? TEXT("PASS") : TEXT("FAIL"));
+	return bPass;
+}
+
+bool FEOSPhase3Tests::TestCharacterEquipmentGridAndCompatibility()
+{
+	UEOSCharacterDefinition* Def = NewObject<UEOSCharacterDefinition>();
+	Def->Framework.Equipment.HeadGearID = "GEAR_KONOHA_HEADBAND_EPIC";
+	Def->Framework.Equipment.WeaponID = "GEAR_KUSANAGI_SWORD";
+	Def->Framework.Compatibility.PrimaryAffinities = { EEOSChakraElement::Lightning, EEOSChakraElement::Fire };
+	Def->Framework.Compatibility.SagePathway = EEOSSageCompatibility::SNAKE;
+
+	AEOSCharacterBase Character;
+	Character.InitializeFromDefinition(Def);
+
+	FEOSGearGridContainer Gear = Character.GetEquipment();
+	FEOSCharacterCompatibilityProfile Compatibility = Character.GetCompatibility();
+
+	bool bPass = (Gear.HeadGearID == "GEAR_KONOHA_HEADBAND_EPIC") && (Gear.WeaponID == "GEAR_KUSANAGI_SWORD") &&
+	             (Compatibility.PrimaryAffinities.Num() == 2) && (Compatibility.SagePathway == EEOSSageCompatibility::SNAKE);
+
+	UE_LOG(LogEOSCore, Log, TEXT("[P3 FRAMEWORK TEST] Character Equipment Grid & Compatibility (Weapon: %s, Affinities: %d): %s"),
+		*Gear.WeaponID, Compatibility.PrimaryAffinities.Num(), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }

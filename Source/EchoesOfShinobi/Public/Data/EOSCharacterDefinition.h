@@ -1,16 +1,24 @@
 #pragma once
 
-#include "CoreMinimal.h"
+#include "../CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "EOSDataTypes.h"
+#include "EOSCharacterDataTypes.h"
 #include "EOSCharacterDefinition.generated.h"
 
+/**
+ * Data-Driven Primary DataAsset defining a Shinobi Character across the 10-Layer Framework.
+ * Prevents creation of 78 independent C++ classes by housing all stats, attacks, jutsu, skills,
+ * ultimates, forms, gear grids, advancement, mastery, and compatibility as authorable data.
+ */
 UCLASS(BlueprintType)
 class ECHOESOFSHINOBI_API UEOSCharacterDefinition : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
 public:
+	UEOSCharacterDefinition();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Identity")
 	FEOSStableId CharacterId;
 
@@ -20,29 +28,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Identity")
 	EEOSCharacterEra Era = EEOSCharacterEra::ERA_GENIN;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Elements")
-	TArray<EEOSElement> ElementalAffinities;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Attributes")
-	float BaseHealth = 1000.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Attributes")
-	float BaseChakra = 500.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Attributes")
-	float BaseAttack = 100.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Attributes")
-	float BaseDefense = 50.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Attributes")
-	float BaseSpeed = 600.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities")
-	TArray<FEOSStableId> JutsuIds;
+	// Unified 10-Layer Character Framework Block
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterFramework")
+	FEOSCharacterFrameworkBlock Framework;
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{
-		return FPrimaryAssetId("EOSCharacter", CharacterId.StableId);
+		return FPrimaryAssetId("EOSCharacter", FName(*CharacterId.StableId.ToString()));
 	}
 };
