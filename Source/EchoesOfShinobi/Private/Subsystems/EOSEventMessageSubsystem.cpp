@@ -1,5 +1,5 @@
-#include "Subsystems/EOSEventMessageSubsystem.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Subsystems/EOSEventMessageSubsystem.h"
+#include "../../EchoesOfShinobi.h"
 
 void UEOSEventMessageSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

@@ -1,5 +1,5 @@
-#include "Subsystems/EOSTelemetrySubsystem.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Subsystems/EOSTelemetrySubsystem.h"
+#include "../../EchoesOfShinobi.h"
 
 void UEOSTelemetrySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

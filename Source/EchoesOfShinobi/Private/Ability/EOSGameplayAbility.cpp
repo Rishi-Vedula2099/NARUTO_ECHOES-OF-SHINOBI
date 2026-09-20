@@ -1,5 +1,5 @@
-#include "Ability/EOSGameplayAbility.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Ability/EOSGameplayAbility.h"
+#include "../../EchoesOfShinobi.h"
 
 UEOSGameplayAbility::UEOSGameplayAbility()
 {

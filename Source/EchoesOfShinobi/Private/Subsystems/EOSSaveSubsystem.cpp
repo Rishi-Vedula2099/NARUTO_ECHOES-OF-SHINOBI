@@ -1,5 +1,5 @@
-#include "Subsystems/EOSSaveSubsystem.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Subsystems/EOSSaveSubsystem.h"
+#include "../../EchoesOfShinobi.h"
 
 void UEOSSaveSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

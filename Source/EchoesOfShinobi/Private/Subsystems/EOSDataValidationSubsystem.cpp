@@ -1,5 +1,5 @@
-#include "Subsystems/EOSDataValidationSubsystem.h"
-#include "EchoesOfShinobi.h"
+#include "../../Public/Subsystems/EOSDataValidationSubsystem.h"
+#include "../../EchoesOfShinobi.h"
 
 void UEOSDataValidationSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
