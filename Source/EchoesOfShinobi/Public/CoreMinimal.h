@@ -55,9 +55,14 @@ typedef signed int int32;
 #define IMPLEMENT_PRIMARY_GAME_MODULE(ModuleClass, ModuleName, GameModuleName)
 #endif
 
+#ifndef DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam
+#define DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(DelegateName, Param1Type, Param1Name) \
+    struct DelegateName { bool IsBound() const { return true; } void Broadcast(Param1Type) {} };
+#endif
+
 #ifndef DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams
 #define DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(DelegateName, Param1Type, Param1Name, Param2Type, Param2Name) \
-    struct DelegateName { void Broadcast(Param1Type, Param2Type) {} };
+    struct DelegateName { bool IsBound() const { return true; } void Broadcast(Param1Type, Param2Type) {} };
 #endif
 
 #ifndef TEXT
@@ -106,6 +111,17 @@ class TMap
 public:
     TMap() {}
     ValueType& FindOrAdd(const KeyType&) { static ValueType Dummy; return Dummy; }
+};
+
+template<typename T>
+class TSet
+{
+public:
+    TSet() {}
+    void Add(const T&) {}
+    void Remove(const T&) {}
+    bool Contains(const T&) const { return true; }
+    int32 Num() const { return 0; }
 };
 
 template<typename T>
