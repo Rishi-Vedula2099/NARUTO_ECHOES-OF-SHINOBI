@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "../Data/EOSTailedBeastDataTypes.h"
 #include "EOSTailedBeastSubsystem.generated.h"
