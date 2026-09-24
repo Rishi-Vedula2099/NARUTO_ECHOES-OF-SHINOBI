@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../CoreMinimal.h"
+#include "CoreMinimal.h"
 
 /**
  * Complete Phase 12 Test Suite:

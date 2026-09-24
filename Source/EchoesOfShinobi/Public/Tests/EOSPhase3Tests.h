@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 
 /**
  * Automated Test Suite for Phase 3: Jutsu Learning Trials, Combat Balance Formulas,

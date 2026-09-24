@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 
 /**
  * Automated Test Suite for Phase 8: World Exploration, Konoha Hub & Interconnected Lands

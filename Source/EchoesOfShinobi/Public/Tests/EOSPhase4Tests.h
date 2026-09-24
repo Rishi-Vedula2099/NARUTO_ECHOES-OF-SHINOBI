@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 
 /**
  * Automated Test Suite for Phase 4: Rank Progression, Mentor Training, Nature Energy & Sage Pathways

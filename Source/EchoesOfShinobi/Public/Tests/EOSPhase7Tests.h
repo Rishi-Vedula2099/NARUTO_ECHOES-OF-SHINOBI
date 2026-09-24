@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 
 /**
  * Automated Test Suite for Phase 7: Data-Driven Story & Stage Content Pipeline
