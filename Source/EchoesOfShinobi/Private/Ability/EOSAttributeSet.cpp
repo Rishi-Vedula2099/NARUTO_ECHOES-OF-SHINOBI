@@ -1,5 +1,5 @@
 #include "../../Public/Ability/EOSAttributeSet.h"
-#include "../../Public/GameplayEffectExtension.h"
+#include "GameplayEffectExtension.h"
 #include "../../EchoesOfShinobi.h"
 
 UEOSAttributeSet::UEOSAttributeSet()

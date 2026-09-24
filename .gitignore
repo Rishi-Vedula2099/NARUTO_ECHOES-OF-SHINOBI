@@ -1,0 +1,40 @@
+# Unreal Engine 5 .gitignore
+# Visual Studio / VS Code / IDE
+.vs/
+.vscode/compileCommands_*/
+.vscode/compileCommands_*.json
+compile_commands.json
+*.code-workspace
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.user
+*.userosct
+*.sln.docstates
+
+# Compiled Object, Response, and Intermediate Files
+*.obj
+*.rsp
+*.res
+*.pch
+*.lib
+*.exp
+*.ilk
+*.idb
+*.pdb
+
+# Unreal Project Build and Cache Directories
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.log
+*.crash
+*.dmp

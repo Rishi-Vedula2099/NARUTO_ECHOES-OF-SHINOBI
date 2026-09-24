@@ -29,7 +29,7 @@ void UEOSAdaptiveAISubsystem::RecordCombatEvent(const FString& PlayerID, const F
 	}
 	else if (EventType == "RANGED_JUTSU")
 	{
-		Snapshot.RANGEDJutsuSpamCount += FMath::RoundToInt(Value);
+		Snapshot.RangedJutsuSpamCount += FMath::RoundToInt(Value);
 	}
 	else if (EventType == "GUARD")
 	{
@@ -89,7 +89,7 @@ FEOSAdaptationDirective UEOSAdaptiveAISubsystem::EvaluateAdaptationDirective(con
 		Directive.SelectedStrategyID = "ST_Action_GapCloser_DashStrike";
 		Directive.GapCloserWeightMultiplier = 2.0f;
 	}
-	else if (Snapshot.RANGEDJutsuSpamCount >= 5 || Snapshot.PreferredDistanceUnits > 700.0f)
+	else if (Snapshot.RangedJutsuSpamCount >= 5 || Snapshot.PreferredDistanceUnits > 700.0f)
 	{
 		// Player spams ranged jutsu -> Trigger projectile defense & teleport close
 		Directive.SelectedStrategyID = "ST_Action_Barrier_TeleportClose";

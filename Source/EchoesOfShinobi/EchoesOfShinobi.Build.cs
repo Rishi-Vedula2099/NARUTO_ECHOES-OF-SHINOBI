@@ -8,6 +8,7 @@ public class EchoesOfShinobi : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.AddRange(new string[] {
+			ModuleDirectory,
 			Path.Combine(ModuleDirectory, "Public")
 		});
 
@@ -25,7 +26,8 @@ public class EchoesOfShinobi : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
 			"CommonUI",
-			"DeveloperSettings"
+			"DeveloperSettings",
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
