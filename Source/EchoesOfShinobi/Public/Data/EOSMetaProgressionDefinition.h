@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "EOSMetaProgressionDataTypes.h"
 #include "EOSMetaProgressionDefinition.generated.h"

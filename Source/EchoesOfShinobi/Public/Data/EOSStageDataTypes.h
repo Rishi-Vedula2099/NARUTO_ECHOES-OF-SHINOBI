@@ -2,17 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "EOSDataTypes.h"
+#include "EOSStoryDataTypes.h"
 #include "EOSStageDataTypes.generated.h"
-
-UENUM(BlueprintType)
-enum class EEOSStageType : uint8
-{
-	STORY UMETA(DisplayName = "Story Stage"),
-	ELITE UMETA(DisplayName = "Elite Encounter Stage"),
-	CHALLENGE UMETA(DisplayName = "Challenge Stage"),
-	MINI_BOSS UMETA(DisplayName = "Mini-Boss Stage"),
-	BOSS UMETA(DisplayName = "Adaptive Boss Stage")
-};
 
 UENUM(BlueprintType)
 enum class EEOSStageObjectiveType : uint8
@@ -23,27 +14,6 @@ enum class EEOSStageObjectiveType : uint8
 	PERFECT_DODGE_COUNT UMETA(DisplayName = "Perform N Perfect Dodges"),
 	PROTECT_TARGET UMETA(DisplayName = "Protect Ally / Escort"),
 	NO_HEALING UMETA(DisplayName = "Clear Without Healing")
-};
-
-USTRUCT(BlueprintType)
-struct FEOSStageObjective
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	FEOSStableId ObjectiveId;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	EEOSStageObjectiveType ObjectiveType = EEOSStageObjectiveType::DEFEAT_ALL;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	FText ObjectiveDescription;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	int32 TargetValue = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	float RewardMultiplier = 1.0f;
 };
 
 USTRUCT(BlueprintType)
@@ -61,7 +31,7 @@ struct FEOSStageNode
 	TArray<FEOSStableId> PrerequisiteNodeIds;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
-	EEOSStageType StageType = EEOSStageType::STORY;
+	EEOSStageType StageType = EEOSStageType::Story;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
 	int32 RecommendedPower = 100;

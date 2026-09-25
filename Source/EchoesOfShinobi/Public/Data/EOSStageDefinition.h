@@ -22,7 +22,7 @@ public:
 	FEOSStableId ArcId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Type")
-	EEOSStageType StageType = EEOSStageType::STORY;
+	EEOSStageType StageType = EEOSStageType::Story;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Power")
 	int32 RecommendedPower = 100;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "../Data/EOSCombatDataTypes.h"
 #include "EOSCombatBalanceSubsystem.generated.h"

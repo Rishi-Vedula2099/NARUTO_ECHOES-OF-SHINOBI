@@ -6,8 +6,9 @@ public class EchoesOfShinobiTarget : TargetRules
 	public EchoesOfShinobiTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V5;
+		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+		bOverrideBuildEnvironment = true;
 		ExtraModuleNames.Add("EchoesOfShinobi");
 	}
 }

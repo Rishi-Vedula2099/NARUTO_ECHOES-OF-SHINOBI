@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "EOSCombatDataTypes.h"
 #include "EOSProgressionDataTypes.h"
@@ -27,6 +27,7 @@ enum class EEOSObjectiveType : uint8
 {
 	DefeatEnemy,
 	DefeatTarget,
+	DefeatBoss,
 	Survive,
 	Protect,
 	Escort,

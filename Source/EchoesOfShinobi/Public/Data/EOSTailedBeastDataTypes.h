@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "EOSCombatDataTypes.h"
 #include "EOSProgressionDataTypes.h"

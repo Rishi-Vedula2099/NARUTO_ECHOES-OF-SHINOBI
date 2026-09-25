@@ -31,15 +31,20 @@ enum class EEOSGearSlot : uint8
 UENUM(BlueprintType)
 enum class EEOSSageCompatibility : uint8
 {
+	NONE UMETA(DisplayName = "None"),
 	NATURAL_AFFINITY UMETA(DisplayName = "Natural Affinity"),
 	TRAINABLE UMETA(DisplayName = "Trainable"),
 	RESTRICTED UMETA(DisplayName = "Restricted"),
-	INCOMPATIBLE UMETA(DisplayName = "Incompatible")
+	INCOMPATIBLE UMETA(DisplayName = "Incompatible"),
+	SNAKE UMETA(DisplayName = "Snake Pathway"),
+	TOAD UMETA(DisplayName = "Toad Pathway"),
+	SLUG UMETA(DisplayName = "Slug Pathway")
 };
 
 UENUM(BlueprintType)
 enum class EEOSTailedBeastResonance : uint8
 {
+	NONE UMETA(DisplayName = "None"),
 	RESONANT UMETA(DisplayName = "Perfect Resonance"),
 	STABLE UMETA(DisplayName = "Stable Vessel"),
 	DANGEROUS UMETA(DisplayName = "Unstable / Volatile"),

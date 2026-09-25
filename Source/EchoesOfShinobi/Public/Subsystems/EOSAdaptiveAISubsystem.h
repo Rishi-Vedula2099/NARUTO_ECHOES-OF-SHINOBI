@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "../Data/EOSAIDataTypes.h"
 #include "EOSAdaptiveAISubsystem.generated.h"
