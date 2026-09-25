@@ -57,7 +57,7 @@ bool FEOSPhase12Tests::TestMissionCompleteAndVictoryValidation()
 	FEOSStageResult SuccessResult;
 	SuccessResult.StageID = TEXT("STG_01_04_05");
 	SuccessResult.bIsSuccess = true;
-	SuccessResult.BossDefeated = true;
+	SuccessResult.bBossDefeated = true;
 	SuccessResult.NarrativeSequenceID = TEXT("MM_SEQ_A01_C04_ZABUZA_CLIMAX");
 	SuccessResult.TransactionID = TEXT("TX_A01_STG05_TEST");
 	bool bAcceptSuccess = Subsystem.StartMissionCompleteSequence(SuccessResult);

@@ -42,7 +42,7 @@ bool FEOSPhase6Tests::TestBehaviorFeatureExtractorTelemetry()
 
 	FEOSTelemetryFeatureSnapshot Snapshot = AISubsystem.ExtractBehaviorFeatures("PLAYER_1");
 
-	bool bPass = (Snapshot.PlayerDodgeBackwardCount == 6) && (Snapshot.RANGEDJutsuSpamCount == 8) && (Snapshot.PreferredDistanceUnits == 850.0f);
+	bool bPass = (Snapshot.PlayerDodgeBackwardCount == 6) && (Snapshot.RangedJutsuSpamCount == 8) && (Snapshot.PreferredDistanceUnits == 850.0f);
 	UE_LOG(LogEOSCore, Log, TEXT("[P6 TEST] Behavior Feature Extractor Telemetry: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
@@ -71,7 +71,7 @@ bool FEOSPhase6Tests::TestAdaptationDirectorBoundedStrategySelection()
 	UEOSAdaptiveAISubsystem AISubsystem;
 
 	FEOSTelemetryFeatureSnapshot RangedSpamSnapshot;
-	RangedSpamSnapshot.RANGEDJutsuSpamCount = 6;
+	RangedSpamSnapshot.RangedJutsuSpamCount = 6;
 	RangedSpamSnapshot.PreferredDistanceUnits = 900.0f;
 
 	FEOSAdaptationDirective RangedDirective = AISubsystem.EvaluateAdaptationDirective("BOSS_KAKUZU", EEOSAITier::MajorBoss, RangedSpamSnapshot);
@@ -93,7 +93,7 @@ bool FEOSPhase6Tests::TestThreeTierAIArchetypeGating()
 	UEOSAdaptiveAISubsystem AISubsystem;
 
 	FEOSTelemetryFeatureSnapshot HighSpamSnapshot;
-	HighSpamSnapshot.RANGEDJutsuSpamCount = 10;
+	HighSpamSnapshot.RangedJutsuSpamCount = 10;
 
 	// Tier 1 Minion -> Always gets squad default strategy regardless of player telemetry
 	FEOSAdaptationDirective MinionDirective = AISubsystem.EvaluateAdaptationDirective("MINION_ZETSU", EEOSAITier::Minion, HighSpamSnapshot);

@@ -22,8 +22,8 @@ bool FEOSPhase1Tests::RunAllPhase1ValidationTests()
 
 bool FEOSPhase1Tests::TestAttributeSetInitialization()
 {
-	UEOSAttributeSet AttrSet;
-	bool bPass = (AttrSet.GetHealth() == 1000.0f) && (AttrSet.GetChakra() == 500.0f);
+	UEOSAttributeSet* AttrSet = NewObject<UEOSAttributeSet>();
+	bool bPass = AttrSet && (AttrSet->GetHealth() == 1000.0f) && (AttrSet->GetChakra() == 500.0f);
 	UE_LOG(LogEOSCore, Log, TEXT("TestAttributeSetInitialization: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }

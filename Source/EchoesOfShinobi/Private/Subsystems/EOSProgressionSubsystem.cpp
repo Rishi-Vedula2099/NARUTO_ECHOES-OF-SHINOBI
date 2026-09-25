@@ -27,19 +27,19 @@ int32 UEOSProgressionSubsystem::CalculateRecommendedStagePower(int32 ArcIndex, i
 
 	switch (StageType)
 	{
-	case EEOSStageType::STORY:
+	case EEOSStageType::Story:
 		StageMult = 100;
 		break;
-	case EEOSStageType::ELITE:
+	case EEOSStageType::Elite:
 		StageMult = 150;
 		break;
-	case EEOSStageType::CHALLENGE:
+	case EEOSStageType::Challenge:
 		StageMult = 180;
 		break;
-	case EEOSStageType::MINI_BOSS:
+	case EEOSStageType::MiniBoss:
 		StageMult = 220;
 		break;
-	case EEOSStageType::BOSS:
+	case EEOSStageType::Boss:
 		StageMult = 300;
 		break;
 	}

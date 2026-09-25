@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "EOSDataTypes.h"
 #include "EOSCharacterDataTypes.h"

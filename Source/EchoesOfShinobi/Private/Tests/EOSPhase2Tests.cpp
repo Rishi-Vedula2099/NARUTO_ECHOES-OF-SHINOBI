@@ -4,6 +4,7 @@
 #include "../../Public/Subsystems/EOSSaveSubsystem.h"
 #include "../../Public/Subsystems/EOSTelemetrySubsystem.h"
 #include "../../Public/Subsystems/EOSProgressionSubsystem.h"
+#include "../../Public/Data/EOSStoryDataTypes.h"
 #include "../../Public/Data/EOSGearDefinition.h"
 #include "../../EchoesOfShinobi.h"
 
@@ -34,8 +35,8 @@ bool FEOSPhase2Tests::RunAllPhase1AndPhase2ValidationTests()
 
 bool FEOSPhase2Tests::TestAttributeSetInitialization()
 {
-	UEOSAttributeSet AttrSet;
-	bool bPass = (AttrSet.GetHealth() == 1000.0f) && (AttrSet.GetChakra() == 500.0f);
+	UEOSAttributeSet* AttrSet = NewObject<UEOSAttributeSet>();
+	bool bPass = AttrSet && (AttrSet->GetHealth() == 1000.0f) && (AttrSet->GetChakra() == 500.0f);
 	UE_LOG(LogEOSCore, Log, TEXT("[P1 TEST] AttributeSet Initialization: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
@@ -74,10 +75,10 @@ bool FEOSPhase2Tests::TestTelemetrySubsystemRecording()
 
 bool FEOSPhase2Tests::TestCharacterPowerFormula()
 {
-	UEOSProgressionSubsystem ProgSubsystem;
+	const UEOSProgressionSubsystem* ProgSubsystem = GetDefault<UEOSProgressionSubsystem>();
 
 	// BaseStats=1000, Level=50 (750), StarTier=5 (500), Ascension=2 (500), Skill=1200, Gear=800, Bond=5 (100) -> 4850 CP
-	float CalculatedPower = ProgSubsystem.CalculateCharacterPower(1000.0f, 50, 5, 2, 1200.0f, 800.0f, 5);
+	float CalculatedPower = ProgSubsystem->CalculateCharacterPower(1000.0f, 50, 5, 2, 1200.0f, 800.0f, 5);
 	bool bPass = (CalculatedPower == 4850.0f);
 
 	UE_LOG(LogEOSCore, Log, TEXT("[P2 TEST] Character Power Formula (Target: 4850 CP, Got: %f): %s"), CalculatedPower, bPass ? TEXT("PASS") : TEXT("FAIL"));
@@ -86,12 +87,12 @@ bool FEOSPhase2Tests::TestCharacterPowerFormula()
 
 bool FEOSPhase2Tests::TestStagePowerThresholdScaling()
 {
-	UEOSProgressionSubsystem ProgSubsystem;
+	const UEOSProgressionSubsystem* ProgSubsystem = GetDefault<UEOSProgressionSubsystem>();
 
 	// Arc 1, Chapter 1, Boss -> Recommended Power = 1*500 + 1*120 + 300 = 920
-	int32 BossPower = ProgSubsystem.CalculateRecommendedStagePower(1, 1, EEOSStageType::BOSS);
+	int32 BossPower = ProgSubsystem->CalculateRecommendedStagePower(1, 1, EEOSStageType::Boss);
 	// Arc 25, Chapter 4, Boss -> Recommended Power = 25*500 + 4*120 + 300 = 13280
-	int32 EndgameBossPower = ProgSubsystem.CalculateRecommendedStagePower(25, 4, EEOSStageType::BOSS);
+	int32 EndgameBossPower = ProgSubsystem->CalculateRecommendedStagePower(25, 4, EEOSStageType::Boss);
 
 	bool bPass = (BossPower == 920) && (EndgameBossPower == 13280);
 	UE_LOG(LogEOSCore, Log, TEXT("[P2 TEST] Stage Power Scaling (Arc 1 Boss: %d, Arc 25 Boss: %d): %s"), BossPower, EndgameBossPower, bPass ? TEXT("PASS") : TEXT("FAIL"));
@@ -115,13 +116,12 @@ bool FEOSPhase2Tests::TestGearDefinitionAndSlotMapping()
 
 bool FEOSPhase2Tests::TestSageAndTailedBeastCompatibility()
 {
-	UEOSProgressionSubsystem ProgSubsystem;
+	const UEOSProgressionSubsystem* ProgSubsystem = GetDefault<UEOSProgressionSubsystem>();
 	FEOSStableId NarutoId("CHR_NARUTO", EEOSProvenanceType::CANON_VERIFIED);
 	FEOSStableId ToadSageId("SAGE_TOAD", EEOSProvenanceType::CANON_VERIFIED);
 
-	EEOSSageCompatibility Compatibility = ProgSubsystem.EvaluateSageCompatibility(NarutoId, ToadSageId);
+	EEOSSageCompatibility Compatibility = ProgSubsystem->EvaluateSageCompatibility(NarutoId, ToadSageId);
 	bool bPass = (Compatibility == EEOSSageCompatibility::NATURAL_AFFINITY);
-
 	UE_LOG(LogEOSCore, Log, TEXT("[P2 TEST] Sage & Tailed Beast Compatibility Check: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }

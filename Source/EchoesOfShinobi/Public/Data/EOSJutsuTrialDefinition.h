@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "EOSJutsuTrialDataTypes.h"
 #include "EOSJutsuTrialDefinition.generated.h"

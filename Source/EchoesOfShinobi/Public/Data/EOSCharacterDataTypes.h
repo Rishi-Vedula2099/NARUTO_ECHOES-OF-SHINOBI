@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "EOSCombatDataTypes.h"
 #include "EOSProgressionDataTypes.h"
@@ -166,7 +166,7 @@ struct ECHOESOFSHINOBI_API FEOSCharacterAdvancementData
 	int32 CurrentEXP = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Advancement")
-	EEOSCharacterStarTier StarTier = EEOSCharacterStarTier::TIER_3_UNCOMMON;
+	EEOSCharacterRarity StarTier = EEOSCharacterRarity::UNCOMMON_3STAR;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Advancement")
 	int32 AscensionLevel = 0; // 0 to 5
