@@ -1,0 +1,16 @@
+AssetID,Name,Category,TargetClass,CurrentClass,SourcePath,CurrentState,BlockerNotes
+CHAR_NARUTO_GENIN,SK_Naruto_Genin,Character,USkeletalMesh,UStaticMesh,Content/Characters/Naruto/Meshes/SK_Naruto_Genin.uasset,BLOCKED_ASSET_AUTHORING,Requires real rigged 3D anime mesh with humanoid skeleton and skin weights
+CHAR_SASUKE_GENIN,SK_Sasuke_Genin,Character,USkeletalMesh,UStaticMesh,Content/SourceMeshes/SK_Sasuke_Genin.obj,BLOCKED_ASSET_AUTHORING,Requires authentic Uchiha Genin 3D mesh and skeleton
+CHAR_SAKURA_GENIN,SK_Sakura_Genin,Character,USkeletalMesh,UStaticMesh,Content/SourceMeshes/SK_Sakura_Genin.obj,BLOCKED_ASSET_AUTHORING,Requires authentic Haruno Genin 3D mesh and skeleton
+BLD_ICHIRAKU_RAMEN,SM_Bld_IchirakuRamen,Architecture,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Buildings/Meshes/SM_Bld_IchirakuRamen.uasset,BLOCKED_ASSET_AUTHORING,Requires open timber alcove counter stools noren and props
+BLD_KONOHA_RESIDENCE_A,SM_Bld_Konoha_Residence_A,Architecture,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_A.uasset,BLOCKED_ASSET_AUTHORING,Requires modular post-and-beam timber framing balcony and terracotta roof tiles
+BLD_KONOHA_RESIDENCE_B,SM_Bld_Konoha_Residence_B,Architecture,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_B.uasset,BLOCKED_ASSET_AUTHORING,Requires matching 2-story Japanese merchant house modular kit
+ROAD_AVENUE_CENTER,SM_Road_Center,Environment,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Roads/Meshes/SM_Road_Center.uasset,BLOCKED_ASSET_AUTHORING,Requires textured cobblestone paving with dirt edges and drainage gutters
+ROAD_SIDEWALK_CURB,SM_Sidewalk_Left,Environment,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Roads/Meshes/SM_Sidewalk_Left.uasset,BLOCKED_ASSET_AUTHORING,Requires raised stone kerb stones with drainage channel
+VEG_SAKURA_BLOOM,SM_Veg_Sakura_Bloom,Foliage,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Foliage/Meshes/SM_Veg_Sakura_Bloom.uasset,BLOCKED_ASSET_AUTHORING,Requires branching organic cherry tree with blossom card canopies
+VEG_KONOHA_CEDAR,SM_Veg_KonohaCedar_Large,Foliage,UStaticMesh,UStaticMesh,Content/Environment/Konoha/Foliage/Meshes/SM_Veg_KonohaCedar_Large.uasset,BLOCKED_ASSET_AUTHORING,Requires authentic Cryptomeria Japanese cedar foliage
+NPC_TEUCHI_CHEF,SK_Villager_Teuchi,NPC,USkeletalMesh,UStaticMesh,Content/Characters/NPCs/KonohaVillagers/Meshes/SK_Villager_Male01.uasset,BLOCKED_ASSET_AUTHORING,Requires authored Teuchi model and ramen cooking idle anim
+NPC_CHUNIN_GUARD,SK_Shinobi_Chunin,NPC,USkeletalMesh,UStaticMesh,Content/Characters/NPCs/KonohaVillagers/Meshes/SK_Villager_Male01.uasset,BLOCKED_ASSET_AUTHORING,Requires Konoha flak jacket Chunin model and guard idle
+NPC_VILLAGERS_01_04,SK_Villager_Civilians,NPC,USkeletalMesh,UStaticMesh,Content/Characters/NPCs/KonohaVillagers/Meshes/SK_Villager_Male01.uasset,BLOCKED_ASSET_AUTHORING,Requires 4 distinct civilian outfits and hairstyles
+VISTA_HOKAGE_ROCK,SM_Backdrop_HokageRock,Vista,UStaticMesh,UStaticMesh,/Engine/BasicShapes/Plane.Plane,RUNTIME_VALIDATED,Emissive painted artwork plane at horizon Y=4800 is visually accepted as hybrid vista
+HUD_ANIME_RPG,EOSShinobiHUD,UI,AHUD,AHUD,Source/EchoesOfShinobi/Private/UI/EOSShinobiHUD.cpp,RUNTIME_VALIDATED,Live GAS-bound HUD functional in C++

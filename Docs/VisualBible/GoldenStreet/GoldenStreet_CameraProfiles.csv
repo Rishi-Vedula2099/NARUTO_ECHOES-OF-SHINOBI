@@ -1,0 +1,9 @@
+CameraID,TargetName,ArmLength,SocketOffsetX,SocketOffsetY,SocketOffsetZ,Pitch,Yaw,FOV,ScreenCoverageTarget,Purpose
+CAM_A,Street_Hero_View,460.0,0.0,0.0,75.0,-8.0,0.0,68.0,28%,North Star benchmark framing; Naruto centered lower-middle third
+CAM_B,Ichiraku_CloseUp,280.0,-40.0,0.0,60.0,-5.0,-35.0,65.0,40%,Storefront inspection; counter stools noren lanterns Teuchi
+CAM_C,Residence_CloseUp,320.0,40.0,0.0,70.0,-6.0,35.0,65.0,40%,Architecture inspection; timber posts beams balcony and terracotta tiles
+CAM_D,Naruto_Turnaround,220.0,0.0,0.0,50.0,-2.0,0.0,55.0,50%,Character asset review; 360-degree anatomical and texture inspection
+CAM_E,Naruto_Locomotion,380.0,0.0,0.0,65.0,-10.0,0.0,70.0,30%,Animation review; run sprint jump land dodge deformation
+CAM_F,NPC_Sidewalk_Life,350.0,0.0,0.0,60.0,-5.0,-20.0,65.0,25%,Village street life; pedestrian density routines and animations
+CAM_G,Combat_Rasengan,400.0,20.0,0.0,70.0,-7.0,0.0,68.0,32%,Combat readability; hand signs chakra FX Rasengan sphere impacts
+CAM_H,HUD_Gameplay_View,460.0,0.0,0.0,75.0,-8.0,0.0,68.0,28%,Live UI overlay; portrait gauge minimap and combo counters
