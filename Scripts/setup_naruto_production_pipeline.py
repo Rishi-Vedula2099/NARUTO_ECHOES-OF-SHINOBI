@@ -156,3 +156,4 @@ with open(out_log, "w", encoding="utf-8") as f:
     f.write("\n".join(lines))
 
 print("SETUP SCRIPT FINISHED SUCCESSFULLY")
+

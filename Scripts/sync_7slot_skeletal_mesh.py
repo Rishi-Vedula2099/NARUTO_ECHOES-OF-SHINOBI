@@ -41,3 +41,4 @@ if mesh_7slot:
 
 with open(r"C:\Projects\NARUTO_ECHOES-OF-SHINOBI\Scripts\sync_mesh_result.txt", "w") as f:
     f.write("SYNC COMPLETE")
+

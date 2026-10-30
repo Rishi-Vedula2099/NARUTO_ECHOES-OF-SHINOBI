@@ -63,3 +63,4 @@ if scc:
 
 unreal.EditorLoadingAndSavingUtils.save_map(world, map_path)
 print("Saved L_Konoha_GoldenStreet successfully!")
+

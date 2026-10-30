@@ -18,3 +18,4 @@ if master_mat:
         f.write(f"Scalars: {scalars}\nVectors: {vectors}\nTextures: {textures}\n")
 else:
     print("Master material not found")
+

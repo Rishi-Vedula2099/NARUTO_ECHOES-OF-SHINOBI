@@ -78,3 +78,4 @@ print("Saved L_VisualAssetSmokeTest!")
 
 with open(r"C:\Projects\NARUTO_ECHOES-OF-SHINOBI\Scripts\render_target_result.txt", "w") as f:
     f.write("RENDER TARGET EXPORT COMPLETE")
+
