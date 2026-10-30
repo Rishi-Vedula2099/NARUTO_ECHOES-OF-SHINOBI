@@ -1,0 +1,31 @@
+MAT: /Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8B860) {r: 0.920000, g: 0.380000, b: 0.060000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8BF20) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.8500000238418579
+MAT: /Game/Characters/Naruto/Materials/MI_Naruto_Hair Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8B1E0) {r: 0.980000, g: 0.840000, b: 0.150000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8A9A0) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.6000000238418579
+MAT: /Game/Characters/Naruto/Materials/MI_Naruto_Navy Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8B0E0) {r: 0.100000, g: 0.180000, b: 0.320000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8B9A0) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.800000011920929
+MAT: /Game/Characters/Naruto/Materials/MI_Naruto_Skin Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8B8E0) {r: 0.980000, g: 0.820000, b: 0.700000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8B560) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.8500000238418579
+MAT: /Game/Characters/Naruto/Materials/MI_Naruto_Collar Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8BEA0) {r: 0.950000, g: 0.950000, b: 0.920000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8B8E0) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.8500000238418579
+MAT: /Game/Environment/Konoha/Materials/M_Konoha_NorthStar_Backdrop Class=Material
+MAT: /Game/Environment/Konoha/Buildings/Materials/MI_Bld_Ichiraku_Wood Class=MaterialInstanceConstant
+  Parent: <Object '/Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master' (0x00000207C3E64600) Class 'Material'>
+  VecParam: BaseColor = <Struct 'LinearColor' (0x000002079FB8D860) {r: 0.760000, g: 0.520000, b: 0.280000, a: 1.000000}>
+  VecParam: EmissiveColor = <Struct 'LinearColor' (0x000002079FB8B0E0) {r: 0.000000, g: 0.000000, b: 0.000000, a: 1.000000}>
+  ScalarParam: Roughness = 0.8500000238418579

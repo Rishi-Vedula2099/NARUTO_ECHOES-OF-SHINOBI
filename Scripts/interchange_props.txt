@@ -1,0 +1,392 @@
+InterchangeGenericMeshPipeline attributes:
+  acquire_editor_element_handle = <built-in method acquire_editor_element_handle of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  apply_constant_topology_optimizations = False
+  auto_compute_lod_screen_sizes = True
+  bone_influence_limit = 0
+  build_nanite = True
+  build_reversed_index_buffer = False
+  build_scale3d = <Struct 'Vector' (0x000001CAA487FA30) {x: 1.000000, y: 1.000000, z: 1.000000}>
+  call_method = <built-in method call_method of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  cast = <built-in method cast of type object at 0x000001CA9E1349C8>
+  collision = True
+  combine_skeletal_meshes_behavior = <InterchangeCombineSkeletalMeshesBehavior.BY_SKELETON: 0>
+  combine_static_meshes = (error: InterchangeGenericMeshPipeline: Property 'combine_static_meshes' on 'InterchangeGenericMeshPipeline' is deprecated: bCombineStaticMeshes is no longer used. Use CombineStaticMeshesBehavior)
+  combine_static_meshes_behavior = <InterchangeCombineStaticMeshesBehavior.DO_NOT_COMBINE: 2>
+  compressed_position_precision = 0.009999999776482582
+  compressed_texture_coordinates_number_of_bits = 10
+  create_physics_asset = True
+  distance_field_replacement_mesh = None
+  distance_field_resolution_scale = 1.0
+  does_property_states_exist = <built-in method does_property_states_exist of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  dst_lightmap_index = 1
+  fallback_collision_type = <InterchangeMeshCollision.CONVEX18DOP: 6>
+  find_or_add_property_states = <built-in method find_or_add_property_states of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  flatten_tracks = True
+  force_collision_primitive_generation = False
+  frame_end = 1
+  frame_start = 0
+  generate_distance_field_as_if_two_sided = False
+  generate_lightmap_u_vs = False
+  get_class = <built-in method get_class of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_default_object = <built-in method get_default_object of type object at 0x000001CA9E1349C8>
+  get_editor_property = <built-in method get_editor_property of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_fname = <built-in method get_fname of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_full_name = <built-in method get_full_name of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_name = <built-in method get_name of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_outer = <built-in method get_outer of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_outermost = <built-in method get_outermost of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_package = <built-in method get_package of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_path_name = <built-in method get_path_name of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_support_asset_classes = <built-in method get_support_asset_classes of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_typed_outer = <built-in method get_typed_outer of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  get_world = <built-in method get_world of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  import_collision = (error: InterchangeGenericMeshPipeline: Property 'import_collision' on 'InterchangeGenericMeshPipeline' is deprecated: Use Collision instead.)
+  import_collision_according_to_mesh_name = True
+  import_geometry_caches = True
+  import_morph_targets = True
+  import_skeletal_meshes = True
+  import_static_meshes = True
+  import_vertex_attributes = False
+  is_editor_property_overridden = <built-in method is_editor_property_overridden of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  is_package_external = <built-in method is_package_external of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  is_reimport_context = <built-in method is_reimport_context of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  lod_group = None
+  lod_screen_sizes = []
+  max_lumen_mesh_cards = 12
+  merge_morph_targets_with_same_name = True
+  min_lightmap_resolution = 64
+  modify = <built-in method modify of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  morph_threshold_position = 0.014999999664723873
+  motion_vectors = <InterchangeMotionVectorsHandling.NO_MOTION_VECTORS: 0>
+  nanite_triangle_threshold = 0
+  one_convex_hull_per_ucx = True
+  optimize_index_buffers = False
+  override_time_range = False
+  physics_asset = None
+  rename = <built-in method rename of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  reset_editor_property = <built-in method reset_editor_property of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_execute_export_pipeline = <built-in method scripted_execute_export_pipeline of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_execute_pipeline = <built-in method scripted_execute_pipeline of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_execute_post_broadcast_pipeline = <built-in method scripted_execute_post_broadcast_pipeline of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_execute_post_factory_pipeline = <built-in method scripted_execute_post_factory_pipeline of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_execute_post_import_pipeline = <built-in method scripted_execute_post_import_pipeline of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_get_pipeline_display_name = <built-in method scripted_get_pipeline_display_name of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  scripted_set_reimport_source_index = <built-in method scripted_set_reimport_source_index of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  set_editor_properties = <built-in method set_editor_properties of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  set_editor_property = <built-in method set_editor_property of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  skeletal_mesh_import_content_type = <InterchangeSkeletalMeshContentType.ALL: 0>
+  src_lightmap_index = 0
+  static_class = <built-in method static_class of type object at 0x000001CA9E1349C8>
+  store_imported_vertex_numbers = False
+  support_face_remap = False
+  support_reimport = <built-in method support_reimport of InterchangeGenericMeshPipeline object at 0x000001CAA184BEB0>
+  threshold_position = 1.9999999494757503e-05
+  threshold_tangent_normal = 1.9999999494757503e-05
+  threshold_uv = 0.0009765625
+  update_skeleton_reference_pose = False
+  use_high_precision_skin_weights = False
+
+AssetTools and Factory inspection:
+  FbxAnimSequenceImportData
+  FbxAssetImportData
+  FbxExportCompatibility
+  FbxExportOption
+  FbxFactory
+  FbxImportUI
+  FbxMaterialBakeMode
+  FbxMaterialBakeSize
+  FbxMeshImportData
+  FbxSceneImportFactory
+  FbxSceneImportOptions
+  FbxSceneImportOptionsSkeletalMesh
+  FbxSceneImportOptionsStaticMesh
+  FbxSceneVertexColorImportOption
+  FbxSkeletalMeshImportData
+  FbxStaticMeshImportData
+  FbxTextureImportData
+  InterchangeActorFactory
+  InterchangeActorFactoryNode
+  InterchangeAnalyticsHandlerBase
+  InterchangeAnalyticsHandlerDefault
+  InterchangeAnimSequenceFactory
+  InterchangeAnimSequenceFactoryNode
+  InterchangeAnimatedProperty
+  InterchangeAnimationPayLoadKey
+  InterchangeAnimationPayLoadType
+  InterchangeAnimationRange
+  InterchangeAnimationTrackBaseNode
+  InterchangeAnimationTrackNode
+  InterchangeAnimationTrackSetFactory
+  InterchangeAnimationTrackSetFactoryNode
+  InterchangeAnimationTrackSetInstanceNode
+  InterchangeAnimationTrackSetNode
+  InterchangeAssetImportData
+  InterchangeAudioSoundWaveFactory
+  InterchangeAudioSoundWaveFactoryNode
+  InterchangeAudioSoundWaveNode
+  InterchangeAudioTranslatorBase
+  InterchangeAudioTranslator_AIF
+  InterchangeAudioTranslator_AIFF
+  InterchangeAudioTranslator_FLAC
+  InterchangeAudioTranslator_MP3
+  InterchangeAudioTranslator_OGG
+  InterchangeAudioTranslator_OPUS
+  InterchangeAudioTranslator_WAV
+  InterchangeAutoExposureMethod
+  InterchangeBaseCameraFactoryNode
+  InterchangeBaseCameraNode
+  InterchangeBaseLightFactoryNode
+  InterchangeBaseLightNode
+  InterchangeBaseMaterialFactoryNode
+  InterchangeBaseNode
+  InterchangeBaseNodeContainer
+  InterchangeBlueprintPipelineBase
+  InterchangeBlueprintPipelineBaseFactory
+  InterchangeCameraActorFactory
+  InterchangeCameraProjectionType
+  InterchangeCardsPipeline
+  InterchangeCineCameraActorFactory
+  InterchangeCineCameraFactoryNode
+  InterchangeCombineSkeletalMeshesBehavior
+  InterchangeCombineStaticMeshesBehavior
+  InterchangeCommonPipelineDataFactoryNode
+  InterchangeContentImportSettings
+  InterchangeCoordinateSystemPolicy
+  InterchangeDDSTranslator
+  InterchangeDecalActorFactory
+  InterchangeDecalActorFactoryNode
+  InterchangeDecalMaterialFactoryNode
+  InterchangeDecalMaterialNode
+  InterchangeDecalNode
+  InterchangeDialogOverride
+  InterchangeDirectionalLightFactoryNode
+  InterchangeDirectionalLightNode
+  InterchangeEditorBlueprintPipelineBase
+  InterchangeEditorBlueprintPipelineBaseFactory
+  InterchangeEditorPipelineBase
+  InterchangeEditorScriptLibrary
+  InterchangeEditorSettings
+  InterchangeFactoryAssetType
+  InterchangeFactoryBase
+  InterchangeFactoryBaseNode
+  InterchangeFbxTranslator
+  InterchangeFbxTranslatorSettings
+  InterchangeFilePickerBase
+  InterchangeFilePickerGeneric
+  InterchangeFilePickerParameters
+  InterchangeForceMeshType
+  InterchangeFrameAlignment
+  InterchangeFunctionCallShaderNode
+  InterchangeGLTFPipeline
+  InterchangeGLTFTranslator
+  InterchangeGenericAnimationPipeline
+  InterchangeGenericAssetsPipeline
+  InterchangeGenericAudioPipeline
+  InterchangeGenericCommonMeshesProperties
+  InterchangeGenericCommonSkeletalMeshesAndAnimationsProperties
+  InterchangeGenericGroomPipeline
+  InterchangeGenericLevelPipeline
+  InterchangeGenericMaterialPipeline
+  InterchangeGenericMeshPipeline
+  InterchangeGenericTexturePipeline
+  InterchangeGeometryCacheActorFactory
+  InterchangeGeometryCacheFactory
+  InterchangeGeometryCacheFactoryNode
+  InterchangeGeometryCacheNode
+  InterchangeGraphInspectorPipeline
+  InterchangeGroomBindingFactory
+  InterchangeGroomBindingFactoryNode
+  InterchangeGroomBindingNode
+  InterchangeGroomCacheAttributes
+  InterchangeGroomCacheFactory
+  InterchangeGroomCacheFactoryNode
+  InterchangeGroomCacheImportType
+  InterchangeGroomComponentFactoryNode
+  InterchangeGroomComponentNode
+  InterchangeGroomFactory
+  InterchangeGroomFactoryNode
+  InterchangeGroomNode
+  InterchangeGroomPayLoadType
+  InterchangeGroomPayloadKey
+  InterchangeGroup
+  InterchangeHeterogeneousVolumeActorFactory
+  InterchangeHeterogeneousVolumeActorFactoryNode
+  InterchangeIESTranslator
+  InterchangeImageWrapperTranslator
+  InterchangeImportSettings
+  InterchangeImportTestPlan
+  InterchangeImportTestPlanFactory
+  InterchangeImportTestStepBase
+  InterchangeImportTestStepImport
+  InterchangeImportTestStepReimport
+  InterchangeInstancedFoliageTypeFactory
+  InterchangeInstancedFoliageTypeFactoryNode
+  InterchangeInstancedStaticMeshComponentFactoryNode
+  InterchangeInstancedStaticMeshComponentNode
+  InterchangeJPGTranslator
+  InterchangeJointNode
+  InterchangeLODMeshData
+  InterchangeLevelFactory
+  InterchangeLevelFactoryNode
+  InterchangeLevelInstanceActorFactory
+  InterchangeLevelInstanceActorFactoryNode
+  InterchangeLevelSequenceFactory
+  InterchangeLevelSequenceFactoryNode
+  InterchangeLevelUserData
+  InterchangeLightActorFactory
+  InterchangeLightFactoryNode
+  InterchangeLightNode
+  InterchangeLightUnits
+  InterchangeManager
+  InterchangeMaterialExpressionFactoryNode
+  InterchangeMaterialFactory
+  InterchangeMaterialFactoryNode
+  InterchangeMaterialFunctionCallExpressionFactoryNode
+  InterchangeMaterialFunctionFactory
+  InterchangeMaterialFunctionFactoryNode
+  InterchangeMaterialImportOption
+  InterchangeMaterialInstanceFactoryNode
+  InterchangeMaterialInstanceNode
+  InterchangeMaterialReferenceFactoryNode
+  InterchangeMaterialReferenceNode
+  InterchangeMaterialSearchLocation
+  InterchangeMaterialXBSDF
+  InterchangeMaterialXEDF
+  InterchangeMaterialXPipeline
+  InterchangeMaterialXShaders
+  InterchangeMaterialXTranslator
+  InterchangeMaterialXVDF
+  InterchangeMegascansPipeline
+  InterchangeMeshActorFactoryNode
+  InterchangeMeshBundleNode
+  InterchangeMeshCollision
+  InterchangeMeshFactoryNode
+  InterchangeMeshGeometry
+  InterchangeMeshInstance
+  InterchangeMeshLODContainerNode
+  InterchangeMeshNode
+  InterchangeMeshPayLoadKey
+  InterchangeMeshPayLoadType
+  InterchangeMeshUtilities
+  InterchangeMotionVectorsHandling
+  InterchangeNodeContainerType
+  InterchangeNodeUserInterfaceContext
+  InterchangeOBJTranslator
+  InterchangePSDTranslator
+  InterchangePerTranslatorDialogOverride
+  InterchangePhysicalCameraFactoryNode
+  InterchangePhysicalCameraNode
+  InterchangePhysicsAssetFactory
+  InterchangePhysicsAssetFactoryNode
+  InterchangePipelineBase
+  InterchangePipelineBaseFactory
+  InterchangePipelineConfigurationBase
+  InterchangePipelineConfigurationDialogResult
+  InterchangePipelineConfigurationGeneric
+  InterchangePipelineMeshesUtilities
+  InterchangePipelineMeshesUtilitiesContext
+  InterchangePipelinePropertyStatePerContext
+  InterchangePipelinePropertyStates
+  InterchangePipelineStack
+  InterchangePipelineStackOverride
+  InterchangePipelineTask
+  InterchangePointLightFactoryNode
+  InterchangePointLightNode
+  InterchangeProjectSettings
+  InterchangeProjectSettingsScript
+  InterchangePropertyTracks
+  InterchangePythonPipelineAsset
+  InterchangePythonPipelineAssetFactory
+  InterchangePythonPipelineBase
+  InterchangeRectLightFactoryNode
+  InterchangeRectLightNode
+  InterchangeSceneComponentFactoryNode
+  InterchangeSceneComponentNode
+  InterchangeSceneHierarchyType
+  InterchangeSceneImportAsset
+  InterchangeSceneImportAssetFactory
+  InterchangeSceneImportAssetFactoryNode
+  InterchangeSceneImportSettings
+  InterchangeSceneNode
+  InterchangeSceneVariantSetsFactory
+  InterchangeSceneVariantSetsFactoryNode
+  InterchangeSceneVariantSetsNode
+  InterchangeShaderGraphNode
+  InterchangeShaderNode
+  InterchangeShaderPortsAPI
+  InterchangeSkeletalAnimationTrackNode
+  InterchangeSkeletalMeshActorFactory
+  InterchangeSkeletalMeshContentType
+  InterchangeSkeletalMeshFactory
+  InterchangeSkeletalMeshFactoryNode
+  InterchangeSkeletalMeshLodDataNode
+  InterchangeSkeletonFactory
+  InterchangeSkeletonFactoryNode
+  InterchangeSkyLightActorFactory
+  InterchangeSkyLightFactoryNode
+  InterchangeSkyLightNode
+  InterchangeSkyLightSourceType
+  InterchangeSourceData
+  InterchangeSourceNode
+  InterchangeSparseVolumeTextureFactory
+  InterchangeSparseVolumeTextureFactoryNode
+  InterchangeSparseVolumeTextureFormat
+  InterchangeSparseVolumeTexturePipeline
+  InterchangeSpecularProfileFactory
+  InterchangeSpecularProfileFactoryNode
+  InterchangeSpecularProfileNode
+  InterchangeSpotLightFactoryNode
+  InterchangeSpotLightNode
+  InterchangeStackInfo
+  InterchangeStandardCameraFactoryNode
+  InterchangeStandardCameraNode
+  InterchangeStaticMeshActorFactory
+  InterchangeStaticMeshFactory
+  InterchangeStaticMeshFactoryNode
+  InterchangeStaticMeshLodDataNode
+  InterchangeTestFunction
+  InterchangeTestPlanPipelineSettings
+  InterchangeTestScreenshotParameters
+  InterchangeTestsBlueprintFunctionLibrary
+  InterchangeTexture2DArrayFactoryNode
+  InterchangeTexture2DArrayNode
+  InterchangeTexture2DFactoryNode
+  InterchangeTexture2DNode
+  InterchangeTextureBlurNode
+  InterchangeTextureColorSpace
+  InterchangeTextureCubeArrayFactoryNode
+  InterchangeTextureCubeArrayNode
+  InterchangeTextureCubeFactoryNode
+  InterchangeTextureCubeNode
+  InterchangeTextureFactory
+  InterchangeTextureFactoryNode
+  InterchangeTextureFilterMode
+  InterchangeTextureLightProfileFactoryNode
+  InterchangeTextureLightProfileNode
+  InterchangeTextureNode
+  InterchangeTextureWrapMode
+  InterchangeTextureWriter
+  InterchangeTransformAnimationTrackNode
+  InterchangeTranslatorAssetType
+  InterchangeTranslatorBase
+  InterchangeTranslatorPipelines
+  InterchangeTranslatorSettings
+  InterchangeTranslatorType
+  InterchangeUEJPEGTranslator
+  InterchangeUsdPrimvar
+  InterchangeUserData
+  InterchangeUserDefinedAttributeInfo
+  InterchangeUserDefinedAttributesAPI
+  InterchangeVariantSetNode
+  InterchangeVertexColorImportOption
+  InterchangeVolumeGridNode
+  InterchangeVolumeNode
+  InterchangeVolumeTextureFactoryNode
+  InterchangeVolumeTextureNode
+  InterchangeVolumeTranslatorSettings
+  InterchangeWriterBase
+  MetaHumanInterchangeDnaTranslator
+  ReimportFbxAnimSequenceFactory
+  ReimportFbxSceneFactory
+  ReimportFbxSkeletalMeshFactory
+  ReimportFbxStaticMeshFactory

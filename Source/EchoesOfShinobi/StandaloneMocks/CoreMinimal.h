@@ -310,6 +310,59 @@ private:
     T* Ptr;
 };
 
+class FSoftObjectPath
+{
+private:
+    std::string Path;
+
+public:
+    FSoftObjectPath() {}
+    FSoftObjectPath(const FString& InPath) : Path(*InPath) {}
+    FSoftObjectPath(const char* InPath) : Path(InPath ? InPath : "") {}
+    FString ToString() const { return FString(Path.c_str()); }
+    bool IsNull() const { return Path.empty() || Path == "None"; }
+    bool operator==(const FSoftObjectPath& Other) const { return Path == Other.Path; }
+};
+
+// Standalone mock of Unreal soft object references (data-driven visual profiles).
+template<typename T>
+class TSoftObjectPtr
+{
+private:
+    FSoftObjectPath SoftPath;
+
+public:
+    TSoftObjectPtr() {}
+    TSoftObjectPtr(const FSoftObjectPath& InPath) : SoftPath(InPath) {}
+    TSoftObjectPtr(const FString& InPath) : SoftPath(InPath) {}
+    TSoftObjectPtr(const char* InPath) : SoftPath(InPath) {}
+
+    const FSoftObjectPath& ToSoftObjectPath() const { return SoftPath; }
+    FString ToString() const { return SoftPath.ToString(); }
+    bool IsNull() const { return SoftPath.IsNull(); }
+    bool IsValid() const { return !SoftPath.IsNull(); }
+    bool operator==(const TSoftObjectPtr& Other) const { return SoftPath == Other.SoftPath; }
+};
+
+template<typename T>
+class TSoftClassPtr
+{
+private:
+    FSoftObjectPath SoftPath;
+
+public:
+    TSoftClassPtr() {}
+    TSoftClassPtr(const FSoftObjectPath& InPath) : SoftPath(InPath) {}
+    TSoftClassPtr(const FString& InPath) : SoftPath(InPath) {}
+    TSoftClassPtr(const char* InPath) : SoftPath(InPath) {}
+
+    const FSoftObjectPath& ToSoftObjectPath() const { return SoftPath; }
+    FString ToString() const { return SoftPath.ToString(); }
+    bool IsNull() const { return SoftPath.IsNull(); }
+    bool IsValid() const { return !SoftPath.IsNull(); }
+    bool operator==(const TSoftClassPtr& Other) const { return SoftPath == Other.SoftPath; }
+};
+
 struct FVector2D
 {
     float X = 0.0f;
@@ -403,6 +456,12 @@ public:
 };
 
 class UEnhancedInputComponent : public UActorComponent {};
+class UGameInstance : public UObject {};
+template<typename T>
+inline T* NewObject(UObject* Outer = nullptr) { return new T(); }
+template<typename T>
+inline bool IsValid(const T* Ptr) { return Ptr != nullptr; }
+
 class UGameInstanceSubsystem : public UObject
 {
 public:

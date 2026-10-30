@@ -1,0 +1,85 @@
+=== CAMERA FRUSTUM ACTOR AUDIT ===
+SkyAtmosphere_KonohaAnime        | Loc: (    0.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: NO_MESH
+DirLight_Konoha_Sun              | Loc: (    0.0,  -500.0,  3500.0) | Rot: ( 82.0,   0.0, -38.0) | Scale: ( 2.5,  2.5,  2.5) | Mesh: NO_MESH
+SkyLight_AnimeAzureFill          | Loc: (    0.0,     0.0,  1500.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: NO_MESH
+Fog_KonohaSunsetHaze             | Loc: (    0.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: NO_MESH
+PostProcess_GoldenStreet         | Loc: (    0.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: NO_MESH
+Ground_BasePlaza                 | Loc: (    0.0,  1800.0,    -2.0) | Rot: (  0.0,   0.0,   0.0) | Scale: (80.0, 80.0,  1.0) | Mesh: Plane
+Road_Avenue_00                   | Loc: (    0.0,  -800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_00                 | Loc: ( -410.0,  -800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_00                | Loc: (  410.0,  -800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_01                   | Loc: (    0.0,  -400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_01                 | Loc: ( -410.0,  -400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_01                | Loc: (  410.0,  -400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_02                   | Loc: (    0.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_02                 | Loc: ( -410.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_02                | Loc: (  410.0,     0.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_03                   | Loc: (    0.0,   400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_03                 | Loc: ( -410.0,   400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_03                | Loc: (  410.0,   400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_04                   | Loc: (    0.0,   800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_04                 | Loc: ( -410.0,   800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_04                | Loc: (  410.0,   800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_05                   | Loc: (    0.0,  1200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_05                 | Loc: ( -410.0,  1200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_05                | Loc: (  410.0,  1200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_06                   | Loc: (    0.0,  1600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_06                 | Loc: ( -410.0,  1600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_06                | Loc: (  410.0,  1600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_07                   | Loc: (    0.0,  2000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_07                 | Loc: ( -410.0,  2000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_07                | Loc: (  410.0,  2000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_08                   | Loc: (    0.0,  2400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_08                 | Loc: ( -410.0,  2400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_08                | Loc: (  410.0,  2400.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_09                   | Loc: (    0.0,  2800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_09                 | Loc: ( -410.0,  2800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_09                | Loc: (  410.0,  2800.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_10                   | Loc: (    0.0,  3200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_10                 | Loc: ( -410.0,  3200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_10                | Loc: (  410.0,  3200.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_11                   | Loc: (    0.0,  3600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_11                 | Loc: ( -410.0,  3600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_11                | Loc: (  410.0,  3600.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Road_Avenue_12                   | Loc: (    0.0,  4000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.2,  1.2,  1.0) | Mesh: SM_Road_Center
+Sidewalk_Left_12                 | Loc: ( -410.0,  4000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Left
+Sidewalk_Right_12                | Loc: (  410.0,  4000.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.7,  1.2,  1.0) | Mesh: SM_Sidewalk_Right
+Bld_IchirakuRamen                | Loc: ( -580.0,   280.0,     0.0) | Rot: ( 90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_IchirakuRamen
+Prop_ShopBanner_Ichiraku         | Loc: ( -380.0,   220.0,     0.0) | Rot: (  0.0,  90.0,  -0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_ShopBanner_Ichiraku
+Lantern_Ichiraku_180             | Loc: ( -335.0,   180.0,   185.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_PaperLantern_Hanging
+Lantern_Ichiraku_300             | Loc: ( -335.0,   300.0,   185.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_PaperLantern_Hanging
+Lantern_Ichiraku_420             | Loc: ( -335.0,   420.0,   185.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_PaperLantern_Hanging
+Bld_KonohaWeaponShop             | Loc: ( -600.0,  1100.0,     0.0) | Rot: ( 90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_Konoha_WeaponShop
+Bld_KonohaMissionOffice          | Loc: ( -600.0,  1850.0,     0.0) | Rot: ( 90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_Konoha_MissionOffice
+Bld_KonohaResidence_A            | Loc: (  580.0,   260.0,     0.0) | Rot: (-90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_Konoha_Residence_A
+Lantern_Residence_180            | Loc: (  355.0,   180.0,   185.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_PaperLantern_Hanging
+Lantern_Residence_300            | Loc: (  355.0,   300.0,   185.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_PaperLantern_Hanging
+Bld_KonohaResidence_B            | Loc: (  600.0,   980.0,     0.0) | Rot: (-90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_Konoha_Residence_B
+Bld_KonohaTeaHouse               | Loc: (  600.0,  1800.0,     0.0) | Rot: (-90.0,   0.0,   0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Bld_Konoha_TeaHouse
+Bld_HokageMansion_MidVista       | Loc: (  520.0,  3600.0,    50.0) | Rot: (-30.0,   0.0,  -0.0) | Scale: ( 1.2,  1.2,  1.2) | Mesh: SM_Bld_Konoha_HokageMansion
+Lnd_KonohaFrontierGate           | Loc: (    0.0,  -900.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.4,  1.4,  1.4) | Mesh: SM_Lnd_KonohaFrontierGate
+Prop_StoneLantern_Left_01        | Loc: ( -260.0,   100.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.8,  0.8,  0.8) | Mesh: SM_Prop_StoneLantern_01
+Prop_StoneLantern_Right_01       | Loc: (  260.0,   100.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.8,  0.8,  0.8) | Mesh: SM_Prop_StoneLantern_01
+Prop_StoneLantern_Left_02        | Loc: ( -260.0,  1500.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.8,  0.8,  0.8) | Mesh: SM_Prop_StoneLantern_01
+Prop_StoneLantern_Right_02       | Loc: (  260.0,  1500.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 0.8,  0.8,  0.8) | Mesh: SM_Prop_StoneLantern_01
+Prop_Bench_Right_01              | Loc: (  280.0,   480.0,     0.0) | Rot: (  0.0, -90.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_Konoha_Bench_01
+Prop_Bench_Left_01               | Loc: ( -280.0,   800.0,     0.0) | Rot: (  0.0,  90.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_Konoha_Bench_01
+Prop_RainBarrel_01               | Loc: (  320.0,   560.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_RainBarrel_Wood
+Prop_SupplyCrate_01              | Loc: (  320.0,   620.0,     0.0) | Rot: (  0.0,  15.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_ShinobiSupply_Crate
+Prop_UtilityPole_Right_01        | Loc: (  340.0,    50.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_WoodenUtilityPole
+Prop_UtilityPole_Left_01         | Loc: ( -340.0,   650.0,     0.0) | Rot: (  0.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SM_Prop_WoodenUtilityPole
+Prop_TrainingDummy_Post          | Loc: (  285.0,  2120.0,     0.0) | Rot: (  0.0, 180.0,  -0.0) | Scale: ( 1.1,  1.1,  1.1) | Mesh: SM_Prop_TrainingLog_Post
+Veg_Cedar_Left_01                | Loc: ( -680.0,   810.0,     0.0) | Rot: (  0.0,  25.0,  -0.0) | Scale: ( 1.3,  1.3,  1.3) | Mesh: SM_Veg_KonohaCedar_Large
+Veg_Cedar_Left_02                | Loc: ( -640.0,  1450.0,     0.0) | Rot: (  0.0,  60.0,  -0.0) | Scale: ( 1.4,  1.4,  1.4) | Mesh: SM_Veg_KonohaCedar_Large
+Veg_Cedar_Right_01               | Loc: (  620.0,   600.0,     0.0) | Rot: (  0.0, 110.0,  -0.0) | Scale: ( 1.4,  1.4,  1.4) | Mesh: SM_Veg_KonohaCedar_Large
+Veg_Cedar_Right_02               | Loc: (  640.0,  2200.0,     0.0) | Rot: (  0.0,  45.0,  -0.0) | Scale: ( 1.5,  1.5,  1.5) | Mesh: SM_Veg_KonohaCedar_Large
+Veg_Sakura_FrontRight            | Loc: (  520.0,   400.0,     0.0) | Rot: (  0.0,  30.0,  -0.0) | Scale: ( 1.3,  1.3,  1.3) | Mesh: SM_Veg_Sakura_Bloom
+Veg_Sakura_FrontLeft             | Loc: ( -520.0,   320.0,     0.0) | Rot: (  0.0,  75.0,  -0.0) | Scale: ( 1.3,  1.3,  1.3) | Mesh: SM_Veg_Sakura_Bloom
+Veg_Sakura_RearRight             | Loc: (  490.0,  2400.0,     0.0) | Rot: (  0.0,  30.0,  -0.0) | Scale: ( 1.3,  1.3,  1.3) | Mesh: SM_Veg_Sakura_Bloom
+PlayerStart_GoldenView           | Loc: (    0.0,     0.0,    95.0) | Rot: (  0.0,  90.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: NO_MESH
+Backdrop_Konoha_NorthStar_Vista  | Loc: (    0.0,  4200.0,   950.0) | Rot: (  0.0,   0.0,  90.0) | Scale: (75.0, 42.0,  1.0) | Mesh: Plane
+NPC_Teuchi_IchirakuChef          | Loc: ( -580.0,   280.0,    15.0) | Rot: ( 90.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SK_Villager_Male01
+NPC_Chunin_GateGuard             | Loc: (  410.0,   100.0,    15.0) | Rot: (-90.0,   0.0,   0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SK_Villager_Male01
+NPC_Leaf_Villager_01             | Loc: ( -410.0,   750.0,    15.0) | Rot: ( 75.0,   0.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SK_Villager_Male01
+NPC_Leaf_Villager_02             | Loc: (  410.0,   520.0,    15.0) | Rot: (-80.0,   0.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SK_Villager_Male01
+NPC_Academy_Student              | Loc: (  410.0,   350.0,    15.0) | Rot: (-60.0,   0.0,  -0.0) | Scale: ( 1.0,  1.0,  1.0) | Mesh: SK_Villager_Male01

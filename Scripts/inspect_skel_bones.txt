@@ -1,0 +1,2 @@
+Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x00000208A414D200) Class 'Skeleton'>
+SkeletalMesh: None

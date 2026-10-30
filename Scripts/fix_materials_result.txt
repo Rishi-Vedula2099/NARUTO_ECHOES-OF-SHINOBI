@@ -1,0 +1,17 @@
+Original mesh_mats length: 7
+Set mesh slot 0 (Skin) -> MI_Naruto_Skin
+Set mesh slot 1 (Navy) -> MI_Naruto_Navy
+Set mesh slot 2 (Hair) -> MI_Naruto_Hair
+Set mesh slot 3 (Collar) -> MI_Naruto_Collar
+Set mesh slot 4 (Tracksuit) -> MI_Naruto_Tracksuit
+Set mesh slot 5 (Emblem) -> MI_Naruto_Emblem
+Set mesh slot 6 (Metal) -> MI_Naruto_Metal
+Saved sk_mesh: True
+Set actor comp slot 0 (Skin) -> MI_Naruto_Skin
+Set actor comp slot 1 (Navy) -> MI_Naruto_Navy
+Set actor comp slot 2 (Hair) -> MI_Naruto_Hair
+Set actor comp slot 3 (Collar) -> MI_Naruto_Collar
+Set actor comp slot 4 (Tracksuit) -> MI_Naruto_Tracksuit
+Set actor comp slot 5 (Emblem) -> MI_Naruto_Emblem
+Set actor comp slot 6 (Metal) -> MI_Naruto_Metal
+Saved map: True

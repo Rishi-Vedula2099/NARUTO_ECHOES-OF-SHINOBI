@@ -1,0 +1,30 @@
+=== STARTING NARUTO PRODUCTION PIPELINE SETUP ===
+Master Material M_AnimeCel_Master: M_AnimeCel_Master
+Configured MI_Naruto_Skin with M_AnimeCel_Master parent.
+Configured MI_Naruto_Navy with M_AnimeCel_Master parent.
+Configured MI_Naruto_Hair with M_AnimeCel_Master parent.
+Configured MI_Naruto_Collar with M_AnimeCel_Master parent.
+Configured MI_Naruto_Tracksuit with M_AnimeCel_Master parent.
+Configured MI_Naruto_Emblem with M_AnimeCel_Master parent.
+Configured MI_Naruto_Metal with M_AnimeCel_Master parent.
+GLB source found: C:\Projects\NARUTO_ECHOES-OF-SHINOBI\Content\SourceMeshes\SK_Naruto_Genin_Rigged.glb (217684 bytes)
+Loaded SkeletalMesh: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin
+  Slot count: 1
+    Slot 0 ('-1') -> MI_Naruto_Skin
+Saved /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin with updated materials.
+Loaded SkeletalMesh: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged
+  Slot count: 7
+    Slot 0 ('Skin') -> MI_Naruto_Skin
+    Slot 1 ('Navy') -> MI_Naruto_Navy
+    Slot 2 ('Hair') -> MI_Naruto_Hair
+    Slot 3 ('Collar') -> MI_Naruto_Collar
+    Slot 4 ('Tracksuit') -> MI_Naruto_Tracksuit
+    Slot 5 ('Emblem') -> MI_Naruto_Emblem
+    Slot 6 ('Metal') -> MI_Naruto_Metal
+Saved /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged with updated materials.
+Duplicated primary SK mesh to /Game/Characters/Naruto/Meshes/SK_Naruto_Genin
+Compiled ABP_Naruto_Genin with Skeleton SK_Naruto_Genin_Skeleton
+Updated SK_Naruto_Genin_ProvingActor in L_VisualAssetSmokeTest with production mesh & materials
+Saved L_VisualAssetSmokeTest
+Loaded primary map: /Game/Maps/GoldenTest/L_Konoha_GoldenStreet
+Primary map actor count: 78

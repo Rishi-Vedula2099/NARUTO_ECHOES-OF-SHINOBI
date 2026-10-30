@@ -1,0 +1,10 @@
+CDO: Default__EOSCharacterBase
+CDO VisualProfile: CharID=CHAR_NARUTO, FormID=FORM_BASE, Mesh=None, ABP=None
+  CDO MaterialInstance[0]: None
+  CDO MaterialInstance[1]: None
+  CDO MaterialInstance[2]: None
+  CDO MaterialInstance[3]: None
+  CDO MaterialInstance[4]: None
+Spawned test_char: EOSCharacterBase_0
+  MeshComp: CharacterMesh0 (SkeletalMeshComponent), Visible=True
+    SkeletalMesh: None

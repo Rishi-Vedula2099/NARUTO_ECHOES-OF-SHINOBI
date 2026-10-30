@@ -37,7 +37,11 @@ class ECHOESOFSHINOBI_API AEOSVillageNPC : public ACharacter
 public:
 	AEOSVillageNPC();
 
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "EOS|NPC")
+	void ApplyNPCTypeVisuals();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|NPC")
 	EEOSNPCType NPCType = EEOSNPCType::Villager;
@@ -59,6 +63,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|NPC")
 	FText DialogueText = FText::FromString("Good morning! Peace has returned to the village.");
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|NPC")
+	TObjectPtr<UStaticMeshComponent> NPCVisualMeshComp;
 
 	UFUNCTION(BlueprintCallable, Category = "EOS|NPC")
 	FString Interact(AActor* Interactor);

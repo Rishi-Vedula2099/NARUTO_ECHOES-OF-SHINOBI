@@ -1,0 +1,2 @@
+Loaded ABP: ABP_Naruto_Genin (AnimBlueprint)
+Target Skeleton: None

@@ -138,3 +138,4 @@ If Antigravity or the IDE is ever reinstalled or cache is cleared:
 3. Check the Visual Target Images at: `Docs/References/MasterPlan/`.
 4. Inspect the recovery documents at: `Docs/VisualRecovery/`.
 5. Instruct the agent: *"Resume execution according to Docs/Conversations/CONVERSATION_ARCHIVE_MASTER_PRODUCTION_PLAN.md starting at Phase 1: Naruto Production Character Upgrade."*
+

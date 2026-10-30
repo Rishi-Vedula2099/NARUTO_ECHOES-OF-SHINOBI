@@ -1,0 +1,21 @@
+Asset: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin -> NOT FOUND
+Asset: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin -> Class: SkeletalMesh
+  Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x000001F167F6D800) Class 'Skeleton'>
+  Materials count: 1
+    Slot 0: -1 = <Object '/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial' (0x000001F123D28C00) Class 'Material'>
+Asset: /Game/Characters/Naruto/Skins/SK_Naruto_GeninTracksuit -> Class: StaticMesh
+  StaticMesh materials count: 7
+Actor in level: PlayerStart_NarutoGenin (Class: PlayerStart)
+  Location: <Struct 'Vector' (0x000001F166ED0060) {x: 0.000000, y: -650.000000, z: 90.000000}>
+  Rotation: <Struct 'Rotator' (0x000001F166ED0060) {pitch: 90.000000, yaw: 0.000000, roll: 0.000000}>
+Actor in level: SK_Naruto_Genin_ProvingActor (Class: SkeletalMeshActor)
+  Location: <Struct 'Vector' (0x000001F166ED0060) {x: 0.000000, y: -350.000000, z: 0.000000}>
+  Rotation: <Struct 'Rotator' (0x000001F166ED0060) {pitch: -90.000000, yaw: 0.000000, roll: 0.000000}>
+  SkeletalMeshComponent:
+    SkeletalMeshAsset: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x000001F175849600) Class 'SkeletalMesh'>
+    AnimClass: <Object '/Game/Characters/Naruto/Anims/ABP_Naruto_Genin.ABP_Naruto_Genin_C' (0x000001F167F58C00) Class 'AnimBlueprintGeneratedClass'>
+    SimulatePhysics: False
+    RelativeRotation: <Struct 'Rotator' (0x000001F16798C998) {pitch: -90.000000, yaw: 0.000000, roll: 0.000000}>
+Actor in level: Camera_Naruto_Showcase (Class: CameraActor)
+  Location: <Struct 'Vector' (0x000001F17444E630) {x: 0.000000, y: -750.000000, z: 80.000000}>
+  Rotation: <Struct 'Rotator' (0x000001F17444E630) {pitch: 90.000000, yaw: 0.000000, roll: 0.000000}>

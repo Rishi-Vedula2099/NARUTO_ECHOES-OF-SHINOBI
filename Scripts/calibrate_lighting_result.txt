@@ -1,0 +1,4 @@
+Set DirectionalLight: 75000 Lux, 5400K, Pitch=-38, Yaw=45
+Set SkyLight: 1.5 intensity, Azure fill
+Set Naruto Actor: Loc=(0, -350, 0), Yaw=180 (facing camera)
+Saved L_VisualAssetSmokeTest

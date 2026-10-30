@@ -1,0 +1,75 @@
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Skin (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.6499999761581421
+  Scalar 'Specular' = 0.10000000149011612
+  Scalar 'RimLightIntensity' = 0.0
+  Scalar 'RimLightPower' = 3.0
+  Scalar 'EmissiveIntensity' = 0.0
+  Scalar 'SubsurfaceWarmth' = 0.6000000238418579
+  Vector 'BaseColor' = R=0.980, G=0.820, B=0.700
+  Vector 'EmissiveColor' = R=0.000, G=0.000, B=0.000
+  Vector 'RimLightColor' = R=1.000, G=0.950, B=0.850
+  Vector 'ShadowColor' = R=0.250, G=0.180, B=0.220
+  Vector 'SkinToneMultiplier' = R=1.000, G=1.000, B=1.000
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Navy (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.800000011920929
+  Scalar 'Specular' = 0.15000000596046448
+  Scalar 'RimLightIntensity' = 0.0
+  Scalar 'RimLightPower' = 3.0
+  Scalar 'EmissiveIntensity' = 0.0
+  Scalar 'SubsurfaceWarmth' = 0.0
+  Vector 'BaseColor' = R=0.060, G=0.100, B=0.220
+  Vector 'EmissiveColor' = R=0.000, G=0.000, B=0.000
+  Vector 'RimLightColor' = R=1.000, G=0.950, B=0.850
+  Vector 'ShadowColor' = R=0.250, G=0.180, B=0.220
+  Vector 'SkinToneMultiplier' = R=1.000, G=1.000, B=1.000
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Hair (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.550000011920929
+  Scalar 'Specular' = 0.3499999940395355
+  Scalar 'RimLightIntensity' = 0.0
+  Scalar 'RimLightPower' = 3.0
+  Scalar 'EmissiveIntensity' = 0.0
+  Scalar 'SubsurfaceWarmth' = 0.0
+  Vector 'BaseColor' = R=1.000, G=0.840, B=0.100
+  Vector 'EmissiveColor' = R=0.000, G=0.000, B=0.000
+  Vector 'RimLightColor' = R=1.000, G=0.950, B=0.850
+  Vector 'ShadowColor' = R=0.250, G=0.180, B=0.220
+  Vector 'SkinToneMultiplier' = R=1.000, G=1.000, B=1.000
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Collar (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.699999988079071
+  Scalar 'Specular' = 0.05000000074505806
+  Scalar 'RimLightIntensity' = 0.0
+  Scalar 'RimLightPower' = 3.0
+  Scalar 'EmissiveIntensity' = 0.0
+  Scalar 'SubsurfaceWarmth' = 0.0
+  Vector 'BaseColor' = R=0.950, G=0.950, B=0.950
+  Vector 'EmissiveColor' = R=0.000, G=0.000, B=0.000
+  Vector 'RimLightColor' = R=1.000, G=0.950, B=0.850
+  Vector 'ShadowColor' = R=0.250, G=0.180, B=0.220
+  Vector 'SkinToneMultiplier' = R=1.000, G=1.000, B=1.000
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.75
+  Scalar 'Specular' = 0.07999999821186066
+  Scalar 'RimLightIntensity' = 0.0
+  Scalar 'RimLightPower' = 3.0
+  Scalar 'EmissiveIntensity' = 0.0
+  Scalar 'SubsurfaceWarmth' = 0.0
+  Vector 'BaseColor' = R=1.000, G=0.450, B=0.040
+  Vector 'EmissiveColor' = R=0.000, G=0.000, B=0.000
+  Vector 'RimLightColor' = R=1.000, G=0.950, B=0.850
+  Vector 'ShadowColor' = R=0.250, G=0.180, B=0.220
+  Vector 'SkinToneMultiplier' = R=1.000, G=1.000, B=1.000
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Emblem (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.6000000238418579
+  Scalar 'Specular' = 0.10000000149011612
+  Vector 'BaseColor' = R=0.850, G=0.080, B=0.080
+Material: /Game/Characters/Naruto/Materials/MI_Naruto_Metal (MaterialInstanceConstant)
+  Parent: M_AnimeCel_Textured_Master
+  Scalar 'Roughness' = 0.25
+  Scalar 'Specular' = 0.8999999761581421
+  Vector 'BaseColor' = R=0.850, G=0.880, B=0.920

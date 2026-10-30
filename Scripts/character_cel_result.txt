@@ -1,0 +1,20 @@
+Master material: M_AnimeCel_Master
+Configured MI_Naruto_Skin -> BaseColor=(0.98, 0.82, 0.7) with parent M_AnimeCel_Master
+Configured MI_Naruto_Navy -> BaseColor=(0.06, 0.1, 0.22) with parent M_AnimeCel_Master
+Configured MI_Naruto_Hair -> BaseColor=(1.0, 0.84, 0.1) with parent M_AnimeCel_Master
+Configured MI_Naruto_Collar -> BaseColor=(0.95, 0.95, 0.95) with parent M_AnimeCel_Master
+Configured MI_Naruto_Tracksuit -> BaseColor=(1.0, 0.45, 0.04) with parent M_AnimeCel_Master
+Configured MI_Naruto_Emblem -> BaseColor=(0.85, 0.08, 0.08) with parent M_AnimeCel_Master
+Configured MI_Naruto_Metal -> BaseColor=(0.85, 0.88, 0.92) with parent M_AnimeCel_Master
+  Assigned slot 0 -> MI_Naruto_Skin
+  Assigned slot 1 -> MI_Naruto_Navy
+  Assigned slot 2 -> MI_Naruto_Hair
+  Assigned slot 3 -> MI_Naruto_Collar
+  Assigned slot 4 -> MI_Naruto_Tracksuit
+  Assigned slot 5 -> MI_Naruto_Emblem
+  Assigned slot 6 -> MI_Naruto_Metal
+Saved SK_Naruto_Genin_Rigged
+Adjusted DirectionalLight for direct front-hero illumination
+Adjusted SkyLight for clean azure shadow fill
+Updated SK_Naruto_Genin_ProvingActor materials and rotation (Yaw=180)
+Saved L_VisualAssetSmokeTest successfully

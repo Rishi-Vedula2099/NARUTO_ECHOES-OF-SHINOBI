@@ -1,0 +1,7 @@
+Assets in /Game/Characters/Naruto/Meshes (5 total):
+  /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_PhysicsAsset.SK_Naruto_Genin_PhysicsAsset -> PhysicsAsset
+  /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin -> SkeletalMesh
+     Bounds extent: <Struct 'Vector' (0x000001C96B089598) {x: 32.000000, y: 27.750000, z: 84.500000}>, origin: <Struct 'Vector' (0x000001C96B089580) {x: 0.000000, y: -6.750000, z: 84.500000}>
+  /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_PhysicsAsset.SK_Naruto_Genin_PhysicsAsset -> PhysicsAsset
+  /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton -> Skeleton
+  /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton -> Skeleton

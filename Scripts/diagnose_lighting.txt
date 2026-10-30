@@ -1,0 +1,114 @@
+=== DIAGNOSE LIGHTING & MATERIALS IN L_Konoha_GoldenStreet ===
+
+ACTOR: SkyAtmosphere_KonohaAnime (SkyAtmosphere)
+  COMP: Sprite (BillboardComponent)
+  COMP: SkyAtmosphereComponent (SkyAtmosphereComponent)
+  COMP: ArrowComponent (ArrowComponent)
+
+ACTOR: DirLight_Konoha_Sun (DirectionalLight)
+  COMP: LightComponent0 (DirectionalLightComponent)
+    Intensity: 8.0
+    LightColor: (226, 244, 255)
+    CastShadows: True
+    AtmosphereSunLight: True
+  COMP: ArrowComponent0 (ArrowComponent)
+  COMP: BillboardComponent_0 (BillboardComponent)
+
+ACTOR: SkyLight_AnimeAzureFill (SkyLight)
+  COMP: Sprite (BillboardComponent)
+  COMP: SkyLightComponent0 (SkyLightComponent)
+    Intensity: 2.0
+    LightColor: (255, 225, 195)
+    CastShadows: True
+    RealTimeCapture: True
+    SourceType: <SkyLightSourceType.SLS_CAPTURED_SCENE: 0>
+  COMP: BillboardComponent_0 (BillboardComponent)
+
+ACTOR: Fog_KonohaSunsetHaze (ExponentialHeightFog)
+  COMP: Sprite (BillboardComponent)
+  COMP: HeightFogComponent0 (ExponentialHeightFogComponent)
+
+ACTOR: PostProcess_GoldenStreet (PostProcessVolume)
+  COMP: BrushComponent0 (BrushComponent)
+
+ACTOR: Road_Avenue_00 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_01 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_02 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_03 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_04 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_05 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_06 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_07 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_08 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_09 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_10 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_11 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Road_Avenue_12 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01.SM_Road_Paved_01
+  MAT[0]: /Game/Environment/Konoha/Roads/Materials/MI_Road_Cobblestone.MI_Road_Cobblestone
+
+ACTOR: Bld_IchirakuRamen (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Buildings/Meshes/SM_Bld_IchirakuRamen.SM_Bld_IchirakuRamen
+  MAT[0]: /Game/Environment/Konoha/Buildings/Materials/MI_Bld_Ichiraku_Wood.MI_Bld_Ichiraku_Wood
+
+ACTOR: Backdrop_Konoha_NorthStar_Vista (StaticMeshActor)
+  SM: /Engine/BasicShapes/Plane.Plane
+  MAT[0]: /Game/Environment/Konoha/Materials/M_Konoha_NorthStar_Backdrop.M_Konoha_NorthStar_Backdrop
+
+ACTOR: Lantern_Ichiraku_180 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Props/Meshes/SM_Prop_PaperLantern_Hanging.SM_Prop_PaperLantern_Hanging
+  MAT[0]: /Game/Environment/Konoha/Props/Materials/MI_Prop_Lantern_Glow.MI_Prop_Lantern_Glow
+
+ACTOR: Lantern_Ichiraku_320 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Props/Meshes/SM_Prop_PaperLantern_Hanging.SM_Prop_PaperLantern_Hanging
+  MAT[0]: /Game/Environment/Konoha/Props/Materials/MI_Prop_Lantern_Glow.MI_Prop_Lantern_Glow
+
+ACTOR: Lantern_Ichiraku_460 (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Props/Meshes/SM_Prop_PaperLantern_Hanging.SM_Prop_PaperLantern_Hanging
+  MAT[0]: /Game/Environment/Konoha/Props/Materials/MI_Prop_Lantern_Glow.MI_Prop_Lantern_Glow
+
+ACTOR: Prop_ShopBanner_Ichiraku (StaticMeshActor)
+  SM: /Game/Environment/Konoha/Props/Meshes/SM_Prop_ShopBanner_Ichiraku.SM_Prop_ShopBanner_Ichiraku
+  MAT[0]: /Game/Environment/Konoha/Buildings/Materials/MI_Bld_Ichiraku_Noren.MI_Bld_Ichiraku_Noren
+
+ACTOR: NPC_Teuchi_IchirakuChef (EOSVillageNPC)
+  SM: /Game/Characters/NPCs/Shopkeepers/Meshes/SK_Shopkeeper_Teuchi.SK_Shopkeeper_Teuchi
+  MAT[0]: /Game/Characters/NPCs/Shopkeepers/Materials/MI_Teuchi_Apron.MI_Teuchi_Apron
+
+=== END DIAGNOSTIC ===

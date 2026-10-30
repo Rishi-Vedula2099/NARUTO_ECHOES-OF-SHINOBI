@@ -1,0 +1,2 @@
+Imported Objects: ["/Game/Characters/Naruto/Meshes/SK_Naruto_Genin.SK_Naruto_Genin"]
+Loaded: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin.SK_Naruto_Genin (StaticMesh)

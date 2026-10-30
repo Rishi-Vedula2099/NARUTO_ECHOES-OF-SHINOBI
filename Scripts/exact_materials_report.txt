@@ -1,0 +1,18 @@
+Loaded SkeletalMesh: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged
+Materials count: 7
+  Slot 0: 'Skin' -> /Game/Characters/Naruto/Materials/MI_Naruto_Skin.MI_Naruto_Skin
+  Slot 1: 'Navy' -> /Game/Characters/Naruto/Materials/MI_Naruto_Navy.MI_Naruto_Navy
+  Slot 2: 'Hair' -> /Game/Characters/Naruto/Materials/MI_Naruto_Hair.MI_Naruto_Hair
+  Slot 3: 'Collar' -> /Game/Characters/Naruto/Materials/MI_Naruto_Collar.MI_Naruto_Collar
+  Slot 4: 'Tracksuit' -> /Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit.MI_Naruto_Tracksuit
+  Slot 5: 'Emblem' -> /Game/Characters/Naruto/Materials/MI_Naruto_Emblem.MI_Naruto_Emblem
+  Slot 6: 'Metal' -> /Game/Characters/Naruto/Materials/MI_Naruto_Metal.MI_Naruto_Metal
+Actor: SK_Naruto_Genin_ProvingActor
+  Component num materials: 7
+    Comp Material 0: /Game/Characters/Naruto/Materials/MI_Naruto_Skin.MI_Naruto_Skin
+    Comp Material 1: /Game/Characters/Naruto/Materials/MI_Naruto_Navy.MI_Naruto_Navy
+    Comp Material 2: /Game/Characters/Naruto/Materials/MI_Naruto_Hair.MI_Naruto_Hair
+    Comp Material 3: /Game/Characters/Naruto/Materials/MI_Naruto_Collar.MI_Naruto_Collar
+    Comp Material 4: /Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit.MI_Naruto_Tracksuit
+    Comp Material 5: /Game/Characters/Naruto/Materials/MI_Naruto_Emblem.MI_Naruto_Emblem
+    Comp Material 6: /Game/Characters/Naruto/Materials/MI_Naruto_Metal.MI_Naruto_Metal

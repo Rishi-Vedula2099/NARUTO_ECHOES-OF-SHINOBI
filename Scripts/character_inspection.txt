@@ -1,0 +1,4 @@
+Asset: /Game/Characters/Sasuke/Meshes/SK_Sasuke_Genin -> Class: StaticMesh
+Asset: /Game/Characters/Kakashi/Meshes/SK_Kakashi_Jonin -> Class: StaticMesh
+Asset: /Game/Characters/RockLee/Meshes/SK_RockLee_Genin -> Class: StaticMesh
+Asset: /Game/Characters/Naruto/Meshes/SK_Naruto_Genin -> Class: StaticMesh

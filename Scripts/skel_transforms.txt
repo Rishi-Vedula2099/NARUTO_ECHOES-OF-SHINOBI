@@ -1,0 +1,11 @@
+SK_Naruto_Genin: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x0000018669329600) Class 'SkeletalMesh'>
+  add_socket
+  find_socket
+  find_socket_and_index
+  find_socket_info
+  get_bone_children
+  get_bone_parent
+  get_socket_by_index
+  num_sockets
+  remove_socket
+  rename_socket

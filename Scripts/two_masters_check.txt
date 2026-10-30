@@ -1,0 +1,9 @@
+M1 (/Game/Materials/Master/M_AnimeCel_Master): Material
+M2 (/Game/Materials/CelShading/M_AnimeCel_Master): Material
+MI_Naruto_Skin: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Naruto_Navy: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Naruto_Hair: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Naruto_Collar: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Naruto_Tracksuit: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Road_Cobblestone: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master
+MI_Bld_Ichiraku_Wood: Parent = /Game/Materials/Master/M_AnimeCel_Master.M_AnimeCel_Master

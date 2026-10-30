@@ -1,0 +1,9 @@
+Moved /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin -> /Game/Characters/Naruto/Meshes/SK_Naruto_Genin: True
+Moved /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton -> /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton: True
+Moved /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_PhysicsAsset -> /Game/Characters/Naruto/Meshes/SK_Naruto_Genin_PhysicsAsset: True
+Loaded SK Mesh: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x0000015C8A7F9600) Class 'SkeletalMesh'> (SkeletalMesh)
+Loaded Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x0000015C8A70D200) Class 'Skeleton'> (Skeleton)
+Mesh has 1 material slots
+Assigned MI_Naruto_Tracksuit to slot 0!
+Bound skeleton SK_Naruto_Genin_Skeleton to /Game/Characters/Naruto/Anims/ABP_Naruto_Genin
+Compiled and saved /Game/Characters/Naruto/Anims/ABP_Naruto_Genin successfully!

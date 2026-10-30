@@ -1,0 +1,4 @@
+Actor location: <Struct 'Vector' (0x000002547116EA40) {x: 0.000000, y: -450.000000, z: 0.000000}>
+Actor rotation: <Struct 'Rotator' (0x000002547116EA40) {pitch: -90.000000, yaw: 0.000000, roll: 0.000000}>
+Set Actor rotation to Pitch=90, Yaw=0, Roll=0
+Saved map.

@@ -5,28 +5,22 @@
 #include "../../Public/Environment/EOSKonohaVillageBuilder.h"
 #include "../../Public/Environment/EOSKonohaTrainingGroundsBuilder.h"
 #include "GameFramework/PlayerStart.h"
+#include "Engine/StaticMeshActor.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "UObject/ConstructorHelpers.h"
+
 #include "../../EchoesOfShinobi.h"
 
 AEOSGameModeBase::AEOSGameModeBase()
 {
 	// 1. Authoritative DefaultPawnClass Resolution:
-	// Prioritize BP_ShinobiCharacter, safely fall back to AEOSCharacterBase C++ class.
-	// Strictly eliminates DefaultPawn0.
-	static ConstructorHelpers::FClassFinder<APawn> ShinobiBPFinder(TEXT("/Game/Characters/BP_ShinobiCharacter.BP_ShinobiCharacter_C"));
-	if (ShinobiBPFinder.Class != nullptr)
-	{
-		DefaultPawnClass = ShinobiBPFinder.Class;
-	}
-	else
-	{
-		DefaultPawnClass = AEOSCharacterBase::StaticClass();
-	}
+	// Use AEOSCharacterBase as the compile-time default.
+	// BP_ShinobiCharacter (once authored) overrides this via the GameMode BP child class.
+	// This avoids FClassFinder CDO errors when the Blueprint doesn't exist yet on disk.
+	DefaultPawnClass = AEOSCharacterBase::StaticClass();
 
 	// 2. Authoritative Controller, HUD, and PlayerState
 	PlayerControllerClass = AEOSPlayerController::StaticClass();
@@ -45,17 +39,43 @@ void AEOSGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
-	// Ensure Authored Konoha Village District environment is spawned if not present
 	if (GetWorld())
 	{
-		TArray<AActor*> FoundVillageBuilders;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEOSKonohaVillageBuilder::StaticClass(), FoundVillageBuilders);
-		if (FoundVillageBuilders.Num() == 0)
+		// Detect whether the active level is already an authored visual world
+		TArray<AActor*> FoundStaticMeshes;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), FoundStaticMeshes);
+
+		int32 StaticMeshCount = 0;
+		for (AActor* Act : FoundStaticMeshes)
 		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			GetWorld()->SpawnActor<AEOSKonohaVillageBuilder>(FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-			UE_LOG(LogEOSCore, Log, TEXT("EOSGameModeBase: Spawned AEOSKonohaVillageBuilder (500m x 500m Authored District) into active level."));
+			if (Act && Act->IsA(AStaticMeshActor::StaticClass()))
+			{
+				StaticMeshCount++;
+			}
+		}
+
+		const FString CurrentMapName = GetWorld()->GetMapName();
+		const bool bIsAuthoredMap = CurrentMapName.Contains(TEXT("Konoha")) || 
+		                            CurrentMapName.Contains(TEXT("GoldenTest")) || 
+		                            CurrentMapName.Contains(TEXT("VisualSmoke")) ||
+		                            StaticMeshCount >= 5;
+
+		if (!bIsAuthoredMap)
+		{
+			TArray<AActor*> FoundVillageBuilders;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEOSKonohaVillageBuilder::StaticClass(), FoundVillageBuilders);
+			if (FoundVillageBuilders.Num() == 0)
+			{
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				GetWorld()->SpawnActor<AEOSKonohaVillageBuilder>(FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+				UE_LOG(LogEOSCore, Log, TEXT("EOSGameModeBase: Spawned AEOSKonohaVillageBuilder into unauthored level."));
+			}
+		}
+		else
+		{
+			UE_LOG(LogEOSCore, Log, TEXT("EOSGameModeBase: Level '%s' is an authored visual map with %d static meshes. Skipping procedural graybox village builder."), 
+				*CurrentMapName, StaticMeshCount);
 		}
 	}
 }
@@ -74,19 +94,41 @@ void AEOSGameModeBase::PostLogin(APlayerController* NewPlayer)
 
 AActor* AEOSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
-	// Find deterministic training grounds PlayerStart
 	TArray<AActor*> PlayerStarts;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStarts);
 
 	if (PlayerStarts.Num() > 0)
 	{
+		// 1. Prioritize GoldenView start for 50m Golden Slice framing
 		for (AActor* Start : PlayerStarts)
 		{
-			if (Start->ActorHasTag(TEXT("KonohaTrainingStart")))
+			if (Start && (Start->ActorHasTag(TEXT("GoldenView")) || 
+			              Start->GetName().Contains(TEXT("GoldenView"))))
+			{
+				UE_LOG(LogEOSCore, Log, TEXT("ChoosePlayerStart: Selected GoldenView start at %s"), *Start->GetActorLocation().ToString());
+				return Start;
+			}
+		}
+
+		// 2. Prioritize KonohaCenter start for 500m District avenue framing
+		for (AActor* Start : PlayerStarts)
+		{
+			if (Start && (Start->ActorHasTag(TEXT("KonohaCenter")) || 
+			              Start->GetName().Contains(TEXT("KonohaCenter"))))
 			{
 				return Start;
 			}
 		}
+
+		// 3. Fallback to tagged training start
+		for (AActor* Start : PlayerStarts)
+		{
+			if (Start && Start->ActorHasTag(TEXT("KonohaTrainingStart")))
+			{
+				return Start;
+			}
+		}
+		UE_LOG(LogEOSCore, Log, TEXT("ChoosePlayerStart: Fallback to PlayerStarts[0] at %s"), *PlayerStarts[0]->GetActorLocation().ToString());
 		return PlayerStarts[0];
 	}
 

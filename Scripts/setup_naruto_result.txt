@@ -1,0 +1,16 @@
+=== SETUP PRODUCTION NARUTO SKELETAL MESH & ANIMATION ===
+Imported tasks completed. Paths: ["/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged_Skeleton.SK_Naruto_Genin_Rigged_Skeleton", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged.SK_Naruto_Genin_Rigged", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged_PhysicsAsset.SK_Naruto_Genin_Rigged_PhysicsAsset"]
+Canonical SK Mesh: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x0000024F7EF8A000) Class 'SkeletalMesh'> (SkeletalMesh)
+Canonical Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x0000024F7E667200) Class 'Skeleton'> (Skeleton)
+Mesh currently has 1 material slots
+  Slot 0 (Skin) -> MI_Naruto_Skin
+  Slot 1 out of range (slots count = 1)
+  Slot 2 out of range (slots count = 1)
+  Slot 3 out of range (slots count = 1)
+  Slot 4 out of range (slots count = 1)
+  Slot 5 out of range (slots count = 1)
+  Slot 6 out of range (slots count = 1)
+Bound skeleton to /Game/Characters/Naruto/Anims/ABP_Naruto_Genin and compiled successfully!
+Spawned new SkeletalMeshActor at <Struct 'Vector' (0x0000024F7C55E630) {x: 0.000000, y: -300.000000, z: 0.000000}>
+Configured SkeletalMeshActor with SK_Naruto_Genin and ABP_Naruto_Genin!
+Saved /Game/Maps/VisualSmoke/L_VisualAssetSmokeTest: True

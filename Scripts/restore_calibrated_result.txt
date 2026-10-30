@@ -1,0 +1,14 @@
+DirectionalLight: 12.0 Lux, 5400K, Pitch=-35, Yaw=50
+SkyLight: 3.0 intensity, Azure fill
+PostProcess: Clamped AEM_HISTOGRAM min/max=1.0
+PlayerStart_NarutoGenin: Loc=(0, -520, 80)
+  Slot 0 (MI_Naruto_Skin) -> MI_Naruto_Skin
+  Slot 1 (MI_Naruto_Navy) -> MI_Naruto_Navy
+  Slot 2 (MI_Naruto_Hair) -> MI_Naruto_Hair
+  Slot 3 (MI_Naruto_Collar) -> MI_Naruto_Collar
+  Slot 4 (MI_Naruto_Tracksuit) -> MI_Naruto_Tracksuit
+  Slot 5 (MI_Naruto_Emblem) -> MI_Naruto_Emblem
+  Slot 6 (MI_Naruto_Metal) -> MI_Naruto_Metal
+Naruto ProvingActor: Loc=(0, -350, 0), Rot=(0, 180, 0)
+Camera_Naruto_Showcase: Loc=(0, -520, 80), FOV=35
+Saved /Game/Maps/VisualSmoke/L_VisualAssetSmokeTest: True

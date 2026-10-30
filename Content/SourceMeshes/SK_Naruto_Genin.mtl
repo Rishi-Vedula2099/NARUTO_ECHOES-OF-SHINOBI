@@ -1,0 +1,30 @@
+newmtl Skin
+illum 2
+Ka 0.2 0.2 0.2
+Kd 0.98 0.82 0.70
+Ks 0.1 0.1 0.1
+
+newmtl Headband
+illum 2
+Ka 0.2 0.2 0.2
+Kd 0.06 0.10 0.22
+Ks 0.1 0.1 0.1
+
+newmtl Hair
+illum 2
+Ka 0.2 0.2 0.2
+Kd 0.98 0.82 0.12
+Ks 0.1 0.1 0.1
+
+newmtl Collar
+illum 2
+Ka 0.2 0.2 0.2
+Kd 0.92 0.92 0.88
+Ks 0.1 0.1 0.1
+
+newmtl Tracksuit
+illum 2
+Ka 0.2 0.2 0.2
+Kd 0.92 0.35 0.04
+Ks 0.1 0.1 0.1
+

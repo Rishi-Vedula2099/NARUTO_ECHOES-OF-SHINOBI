@@ -1,0 +1,14 @@
+SK Mesh: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x000001C548048200) Class 'SkeletalMesh'>
+Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x000001C5259FE400) Class 'Skeleton'>
+Mesh skeleton is: None
+Multi-material mesh has 1 material slots!
+  Slot 0 (Skin) -> MI_Naruto_Skin
+  Slot 1 out of range (slots count = 1)
+  Slot 2 out of range (slots count = 1)
+  Slot 3 out of range (slots count = 1)
+  Slot 4 out of range (slots count = 1)
+  Slot 5 out of range (slots count = 1)
+  Slot 6 out of range (slots count = 1)
+Compiled ABP with skeleton SK_Naruto_Genin_Skeleton!
+Reconnected SK_Naruto_Genin_ProvingActor to SK_Naruto_Genin & ABP!
+Saved /Game/Maps/VisualSmoke/L_VisualAssetSmokeTest successfully!

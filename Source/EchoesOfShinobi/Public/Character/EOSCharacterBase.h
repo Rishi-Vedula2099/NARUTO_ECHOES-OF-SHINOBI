@@ -7,12 +7,18 @@
 #include "../Ability/EOSAttributeSet.h"
 #include "../Data/EOSCharacterDefinition.h"
 #include "../Data/EOSPresentationDataTypes.h"
+#include "../Data/EOSSharedVisualRectificationTypes.h"
+#include "../Data/EOSVisualRectificationDataTypes.h"
+#include "NiagaraSystem.h"
 #include "EOSCharacterBase.generated.h"
+
+class UNiagaraComponent;
 
 /**
  * Unified Base Character Class for all 78 playable shinobi, ANBU units, and bosses.
  * Prevents 78 separate hardcoded C++ classes by consuming authorable 10-layer data assets.
  * Phase 13: Integrated with data-driven camera, movement, and stylized visual profiles.
+ * VISUAL-RECTIFICATION: soft-reference asset resolution + strict visual integrity gate.
  */
 UCLASS()
 class ECHOESOFSHINOBI_API AEOSCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -150,8 +156,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Visuals")
 	FEOSCharacterVisualProfile VisualProfile;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Visuals")
+	TObjectPtr<UStaticMeshComponent> StylizedStaticMeshComp;
+
 	UFUNCTION(BlueprintCallable, Category = "EOS|Visuals")
 	void ApplyVisualProfile(const FEOSCharacterVisualProfile& NewProfile);
+
+	// Jutsu VFX (Rasengan proof-of-pipeline): soft Niagara reference, activated on jutsu cast.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Visuals|VFX")
+	TSoftObjectPtr<UNiagaraSystem> JutsuVFXAsset;
+
+	// Strict visual integrity gate (VISUAL-RECTIFICATION-MASTER-1.1 Section 5).
+	UFUNCTION(BlueprintCallable, Category = "EOS|Visuals")
+	TArray<FEOSVisualAssetSlotVerdict> ValidateVisualAssetIntegrity(bool bLogResults = true) const;
 
 	// Visual Form Transformations (Phases 1, 2, 4, 5)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Visuals")
@@ -184,4 +201,10 @@ protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	void SetupStylizedVisualMesh();
+	void ApplyMeshComponentLayout();
+	void ResolveProductionVisualDefaults();
+	void SpawnJutsuVFXAtSocket();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Visuals|VFX")
+	TObjectPtr<UNiagaraComponent> JutsuVFXComponent;
 };

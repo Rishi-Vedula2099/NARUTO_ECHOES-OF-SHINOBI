@@ -1,0 +1,23 @@
+Imported objects: ["/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged_Skeleton.SK_Naruto_Genin_Rigged_Skeleton", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged.SK_Naruto_Genin_Rigged", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged_PhysicsAsset.SK_Naruto_Genin_Rigged_PhysicsAsset"]
+SK Mesh: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged.SK_Naruto_Genin_Rigged' (0x00000292487E6E00) Class 'SkeletalMesh'>
+Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged_Skeleton.SK_Naruto_Genin_Rigged_Skeleton' (0x00000292483B0600) Class 'Skeleton'>
+Mesh has 7 material slots:
+  Slot 0: 'Skin'
+    Assigned -> MI_Naruto_Skin
+  Slot 1: 'Navy'
+    Assigned -> MI_Naruto_Navy
+  Slot 2: 'Hair'
+    Assigned -> MI_Naruto_Hair
+  Slot 3: 'Collar'
+    Assigned -> MI_Naruto_Collar
+  Slot 4: 'Tracksuit'
+    Assigned -> MI_Naruto_Tracksuit
+  Slot 5: 'Emblem'
+    Assigned -> MI_Naruto_Emblem
+  Slot 6: 'Metal'
+    Assigned -> MI_Naruto_Metal
+Compiled ABP with skeleton SK_Naruto_Genin_Rigged_Skeleton!
+Configured SK_Naruto_Genin_ProvingActor at (0, -350, 0), Rot=(0, -90, 0)
+Configured Camera_Naruto_Showcase at (0, -650, 85), Rot=(0, 90, 0), FOV=40
+Aligned PlayerStart_NarutoGenin with camera
+Saved /Game/Maps/VisualSmoke/L_VisualAssetSmokeTest successfully!

@@ -1,0 +1,11 @@
+Loaded /Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit
+Parent: M_AnimeCel_Master
+Vector parameter values count: 5
+  Param 'BaseColor': R=1.000, G=0.450, B=0.040
+  Param 'EmissiveColor': R=0.000, G=0.000, B=0.000
+  Param 'RimLightColor': R=1.000, G=0.950, B=0.850
+  Param 'ShadowColor': R=0.250, G=0.180, B=0.220
+  Param 'SkinToneMultiplier': R=1.000, G=1.000, B=1.000
+Parent name: M_AnimeCel_Master
+Set DirectionalLight Yaw=60, Pitch=-30 (over camera shoulder into Naruto's face)
+Saved map.

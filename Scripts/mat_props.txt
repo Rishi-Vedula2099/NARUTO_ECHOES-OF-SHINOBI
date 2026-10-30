@@ -1,0 +1,3 @@
+BlendMode=<BlendMode.BLEND_OPAQUE: 0>
+ShadingModel=<MaterialShadingModel.MSM_DEFAULT_LIT: 1>
+TwoSided=False

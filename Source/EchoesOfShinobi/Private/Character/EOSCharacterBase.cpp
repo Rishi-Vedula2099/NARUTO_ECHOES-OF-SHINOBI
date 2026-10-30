@@ -4,6 +4,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
+#include "Engine/SkeletalMesh.h"
+#include "Materials/MaterialInterface.h"
+#include "UObject/SoftObjectPath.h"
 #include "Kismet/GameplayStatics.h"
 #include "../../Public/Combat/EOSTrainingDummy.h"
 #include "../../EchoesOfShinobi.h"
@@ -47,18 +53,109 @@ AEOSCharacterBase::AEOSCharacterBase()
 	AbilitySystemComponent = CreateDefaultSubobject<UEOSAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UEOSAttributeSet>(TEXT("AttributeSet"));
 
+	// Niagara Jutsu Component
+	JutsuVFXComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("JutsuVFXComponent"));
+	if (GetMesh())
+	{
+		JutsuVFXComponent->SetupAttachment(GetMesh());
+	}
+	JutsuVFXComponent->bAutoActivate = false;
+
+	ResolveProductionVisualDefaults();
+	ApplyMeshComponentLayout();
+
 	SetupStylizedVisualMesh();
 }
 
-void AEOSCharacterBase::SetupStylizedVisualMesh()
+void AEOSCharacterBase::ResolveProductionVisualDefaults()
 {
-	// Vertical slice character visual presentation:
-	// Eliminates TECHNICAL_DEBUG_ASSETS (primitives / checkerboard) from player view.
-	// Uses authored stylized skeletal mesh or stylized character asset with anime cel-shaded material.
+	VisualProfile.CharacterID = TEXT("CHAR_NARUTO");
+	VisualProfile.EraID = TEXT("ERA_GENIN");
+	VisualProfile.FormID = TEXT("FORM_BASE");
+	VisualProfile.CostumeID = TEXT("COSTUME_CLASSIC_TRACKSUIT");
+	VisualProfile.AnimationProfileID = TEXT("ANIM_NARUTO_GENIN");
+	VisualProfile.MaterialProfileID = TEXT("MAT_CEL_TOON_SHINOBI");
+	VisualProfile.VFXProfileID = TEXT("VFX_NARUTO_DEFAULT");
+
+	// Canonical proof-of-pipeline mesh & ABP (Naruto Genin)
+	VisualProfile.SkeletalMeshAsset = TSoftObjectPtr<USkeletalMesh>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin")));
+	VisualProfile.AnimBlueprintClass = TSoftClassPtr<UAnimInstance>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Anims/ABP_Naruto_Genin.ABP_Naruto_Genin_C")));
+
+	// 7 Canonical Material Slots
+	VisualProfile.MaterialInstances.Empty();
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Skin.MI_Naruto_Skin"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Navy.MI_Naruto_Navy"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Hair.MI_Naruto_Hair"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Collar.MI_Naruto_Collar"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit.MI_Naruto_Tracksuit"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Emblem.MI_Naruto_Emblem"))));
+	VisualProfile.MaterialInstances.Add(TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Metal.MI_Naruto_Metal"))));
+
+	// Canonical Niagara Jutsu Asset (Rasengan)
+	JutsuVFXAsset = TSoftObjectPtr<UNiagaraSystem>(FSoftObjectPath(TEXT("/Game/VFX/Niagara/Jutsu/NS_Rasengan_Orb_Master.NS_Rasengan_Orb_Master")));
+}
+
+void AEOSCharacterBase::ApplyMeshComponentLayout()
+{
 	if (USkeletalMeshComponent* CharMesh = GetMesh())
 	{
 		CharMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -96.0f));
 		CharMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	}
+}
+
+void AEOSCharacterBase::SetupStylizedVisualMesh()
+{
+	ApplyMeshComponentLayout();
+
+	if (USkeletalMeshComponent* CharMesh = GetMesh())
+	{
+		if (USkeletalMesh* MeshAsset = VisualProfile.SkeletalMeshAsset.LoadSynchronous())
+		{
+			CharMesh->SetSkeletalMeshAsset(MeshAsset);
+		}
+
+		if (UClass* AnimClass = VisualProfile.AnimBlueprintClass.LoadSynchronous())
+		{
+			CharMesh->SetAnimInstanceClass(AnimClass);
+		}
+
+		for (int32 SlotIdx = 0; SlotIdx < VisualProfile.MaterialInstances.Num(); ++SlotIdx)
+		{
+			if (UMaterialInterface* Mat = VisualProfile.MaterialInstances[SlotIdx].LoadSynchronous())
+			{
+				CharMesh->SetMaterial(SlotIdx, Mat);
+			}
+		}
+	}
+}
+
+void AEOSCharacterBase::SpawnJutsuVFXAtSocket()
+{
+	if (!JutsuVFXAsset.IsNull())
+	{
+		UNiagaraSystem* LoadedVFX = JutsuVFXAsset.LoadSynchronous();
+		if (LoadedVFX && GetMesh())
+		{
+			if (JutsuVFXComponent)
+			{
+				JutsuVFXComponent->SetAsset(LoadedVFX);
+				JutsuVFXComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("hand_rSocket"));
+				JutsuVFXComponent->Activate(true);
+			}
+			else
+			{
+				JutsuVFXComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+					LoadedVFX,
+					GetMesh(),
+					TEXT("hand_rSocket"),
+					FVector::ZeroVector,
+					FRotator::ZeroRotator,
+					EAttachLocation::SnapToTarget,
+					true
+				);
+			}
+		}
 	}
 }
 
@@ -376,6 +473,7 @@ void AEOSCharacterBase::CastJutsuSlot(int32 SlotIndex)
 	{
 	case 0:
 		JutsuID = TEXT("JUTSU_NARUTO_RASENGAN"); // Slot 1: [Q] Rasengan (CANON_VERIFIED)
+		SpawnJutsuVFXAtSocket();
 		Cost = 30.0f;
 		Damage = 220.0f;
 		break;
@@ -545,4 +643,160 @@ void AEOSCharacterBase::AttachGearVisual(FName SocketName, const FString& GearMe
 {
 	UE_LOG(LogEOSCore, Log, TEXT("Attaching Gear Visual Mesh %s to Character Socket: %s"),
 		*GearMeshName, *SocketName.ToString());
+}
+
+
+TArray<FEOSVisualAssetSlotVerdict> AEOSCharacterBase::ValidateVisualAssetIntegrity(bool bLogResults) const
+{
+	TArray<FEOSVisualAssetSlotVerdict> Verdicts;
+
+	// 1. SkeletalMesh Slot
+	{
+		FEOSVisualAssetSlotVerdict MeshVerdict;
+		MeshVerdict.AssetID = VisualProfile.CharacterID;
+		MeshVerdict.AssetSlot = TEXT("SkeletalMesh");
+		MeshVerdict.ResolvedPath = VisualProfile.SkeletalMeshAsset.ToSoftObjectPath().ToString();
+		MeshVerdict.FailureCode = FEOSVisualRectificationStatus::FailNone;
+
+		if (MeshVerdict.ResolvedPath.IsEmpty())
+		{
+			MeshVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingSoftReference;
+			MeshVerdict.bPassed = false;
+		}
+		else if (FEOSVisualRectificationStatus::IsForbiddenEngineBasicShape(MeshVerdict.ResolvedPath))
+		{
+			MeshVerdict.FailureCode = FEOSVisualRectificationStatus::FailForbiddenBasicShape;
+			MeshVerdict.bPassed = false;
+		}
+		else if (FEOSVisualRectificationStatus::IsForbiddenDefaultMannequin(MeshVerdict.ResolvedPath))
+		{
+			MeshVerdict.FailureCode = FEOSVisualRectificationStatus::FailForbiddenMannequin;
+			MeshVerdict.bPassed = false;
+		}
+		else
+		{
+			UObject* LoadedObj = VisualProfile.SkeletalMeshAsset.ToSoftObjectPath().ResolveObject();
+			if (!LoadedObj)
+			{
+				LoadedObj = VisualProfile.SkeletalMeshAsset.LoadSynchronous();
+			}
+			if (LoadedObj != nullptr)
+			{
+				MeshVerdict.bPassed = true;
+			}
+			else
+			{
+				MeshVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingPackage;
+				MeshVerdict.bPassed = false;
+			}
+		}
+		Verdicts.Add(MeshVerdict);
+	}
+
+	// 2. AnimBlueprint Slot
+	{
+		FEOSVisualAssetSlotVerdict AnimVerdict;
+		AnimVerdict.AssetID = VisualProfile.CharacterID;
+		AnimVerdict.AssetSlot = TEXT("AnimBlueprint");
+		AnimVerdict.ResolvedPath = VisualProfile.AnimBlueprintClass.ToSoftObjectPath().ToString();
+		AnimVerdict.FailureCode = FEOSVisualRectificationStatus::FailNone;
+
+		if (AnimVerdict.ResolvedPath.IsEmpty())
+		{
+			AnimVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingSoftReference;
+			AnimVerdict.bPassed = false;
+		}
+		else
+		{
+			UClass* LoadedClass = VisualProfile.AnimBlueprintClass.LoadSynchronous();
+			if (LoadedClass != nullptr)
+			{
+				AnimVerdict.bPassed = true;
+			}
+			else
+			{
+				AnimVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingPackage;
+				AnimVerdict.bPassed = false;
+			}
+		}
+		Verdicts.Add(AnimVerdict);
+	}
+
+	// 3. JutsuVFX Slot
+	{
+		FEOSVisualAssetSlotVerdict VFXVerdict;
+		VFXVerdict.AssetID = VisualProfile.CharacterID;
+		VFXVerdict.AssetSlot = TEXT("JutsuVFX");
+		VFXVerdict.ResolvedPath = JutsuVFXAsset.ToSoftObjectPath().ToString();
+		VFXVerdict.FailureCode = FEOSVisualRectificationStatus::FailNone;
+
+		if (VFXVerdict.ResolvedPath.IsEmpty())
+		{
+			VFXVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingSoftReference;
+			VFXVerdict.bPassed = false;
+		}
+		else
+		{
+			UObject* LoadedVFX = JutsuVFXAsset.LoadSynchronous();
+			if (LoadedVFX != nullptr)
+			{
+				VFXVerdict.bPassed = true;
+			}
+			else
+			{
+				VFXVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingPackage;
+				VFXVerdict.bPassed = false;
+			}
+		}
+		Verdicts.Add(VFXVerdict);
+	}
+
+	// 4. MaterialInstances Slot
+	{
+		FEOSVisualAssetSlotVerdict MatVerdict;
+		MatVerdict.AssetID = VisualProfile.CharacterID;
+		MatVerdict.AssetSlot = TEXT("MaterialInstances");
+		MatVerdict.FailureCode = FEOSVisualRectificationStatus::FailNone;
+
+		if (VisualProfile.MaterialInstances.Num() == 0)
+		{
+			MatVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingSoftReference;
+			MatVerdict.bPassed = false;
+		}
+		else
+		{
+			bool bAllMatsValid = true;
+			FString CombinedPaths;
+			for (const auto& MatSoftPtr : VisualProfile.MaterialInstances)
+			{
+				const FString PathStr = MatSoftPtr.ToSoftObjectPath().ToString();
+				CombinedPaths += PathStr + TEXT(";");
+				if (FEOSVisualRectificationStatus::IsForbiddenPlaceholderMaterial(PathStr))
+				{
+					MatVerdict.FailureCode = FEOSVisualRectificationStatus::FailForbiddenPlaceholderMaterial;
+					bAllMatsValid = false;
+					break;
+				}
+				if (!MatSoftPtr.LoadSynchronous())
+				{
+					MatVerdict.FailureCode = FEOSVisualRectificationStatus::FailMissingPackage;
+					bAllMatsValid = false;
+				}
+			}
+			MatVerdict.ResolvedPath = CombinedPaths;
+			MatVerdict.bPassed = bAllMatsValid;
+		}
+		Verdicts.Add(MatVerdict);
+	}
+
+	if (bLogResults)
+	{
+		for (const FEOSVisualAssetSlotVerdict& V : Verdicts)
+		{
+			UE_LOG(LogEOSCore, Log, TEXT("Visual Integrity Gate [%s - %s]: %s (Failure: %s) -> %s"),
+				*V.AssetID, *V.AssetSlot, V.bPassed ? TEXT("PASS") : TEXT("FAIL"), *V.FailureCode, *V.ResolvedPath);
+		}
+	}
+
+	return Verdicts;
 }

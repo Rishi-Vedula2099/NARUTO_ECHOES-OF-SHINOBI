@@ -27,7 +27,9 @@ public class EchoesOfShinobi : ModuleRules
 			"GameplayTasks",
 			"CommonUI",
 			"DeveloperSettings",
-			"UMG"
+			"UMG",
+			"Niagara",
+			"AssetRegistry"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {

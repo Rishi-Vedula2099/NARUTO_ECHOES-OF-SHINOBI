@@ -19,8 +19,12 @@ class ECHOESOFSHINOBI_API AEOSTrainingDummy : public AActor
 public:
 	AEOSTrainingDummy();
 
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION(BlueprintCallable, Category = "EOS|Combat")
+	void ApplyProductionVisuals();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
@@ -36,6 +40,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Stats")
 	float CurrentHealth = 1000.0f;
+
+	// VISUAL-RECTIFICATION: production training-post / target-board meshes (registry-canonical paths).
+	// While unauthored, the Engine/BasicShapes cylinder stays strictly tagged TECHNICAL_DEBUG_ASSET.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Visuals|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionPostMesh; // /Game/Environment/Konoha/Props/Meshes/SM_Prop_TrainingLog_Post
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Visuals|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionTargetBoardMesh; // /Game/Environment/Konoha/Props/Meshes/SM_Prop_TargetBoard
 
 	UFUNCTION(BlueprintPure, Category = "EOS|Stats")
 	float GetHealthPercent() const { return MaxHealth > 0.0f ? FMath::Clamp(CurrentHealth / MaxHealth, 0.0f, 1.0f) : 0.0f; }

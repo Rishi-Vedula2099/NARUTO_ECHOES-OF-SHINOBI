@@ -6,6 +6,10 @@
 #include "EOSCombatDataTypes.h"
 #include "EOSPresentationDataTypes.generated.h"
 
+class USkeletalMesh;
+class UAnimInstance;
+class UMaterialInterface;
+
 /**
  * Camera Modes supported by the Shinobi dynamic camera state machine.
  */
@@ -35,13 +39,13 @@ struct ECHOESOFSHINOBI_API FEOSCameraProfile
 	EEOSCameraMode ActiveMode = EEOSCameraMode::Exploration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float TargetArmLength = 380.0f;
+	float TargetArmLength = 460.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	FVector SocketOffset = FVector(0.0f, 35.0f, 65.0f);
+	FVector SocketOffset = FVector(0.0f, 0.0f, 75.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float FieldOfView = 80.0f;
+	float FieldOfView = 68.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float CameraLagSpeed = 12.0f;
@@ -50,7 +54,7 @@ struct ECHOESOFSHINOBI_API FEOSCameraProfile
 	bool bEnableCameraLag = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float TargetHeightScreenFraction = 0.20f; // ~18-22% screen height composition
+	float TargetHeightScreenFraction = 0.28f; // ~28% screen height composition (EOS Visual DNA)
 
 	void SetMode(EEOSCameraMode InMode)
 	{
@@ -58,9 +62,9 @@ struct ECHOESOFSHINOBI_API FEOSCameraProfile
 		switch (InMode)
 		{
 		case EEOSCameraMode::Exploration:
-			TargetArmLength = 380.0f;
-			SocketOffset = FVector(0.0f, 35.0f, 65.0f);
-			FieldOfView = 80.0f;
+			TargetArmLength = 460.0f;
+			SocketOffset = FVector(0.0f, 0.0f, 75.0f);
+			FieldOfView = 68.0f;
 			CameraLagSpeed = 12.0f;
 			break;
 		case EEOSCameraMode::Combat:
@@ -235,6 +239,15 @@ struct ECHOESOFSHINOBI_API FEOSCharacterVisualProfile
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	FString VFXProfileID = "VFX_NARUTO_DEFAULT";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+	TSoftObjectPtr<USkeletalMesh> SkeletalMeshAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+	TSoftClassPtr<UAnimInstance> AnimBlueprintClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+	TArray<TSoftObjectPtr<UMaterialInterface>> MaterialInstances;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 	FText CharacterDisplayName = FText::FromString("Naruto Uzumaki");

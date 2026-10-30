@@ -20,6 +20,10 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
+	// Initialize Canon Jutsu Records (Fireball, Chidori, Rasengan, Shadow Clone, Water Dragon)
+	UFUNCTION(BlueprintCallable, Category = "EchoesOfShinobi|JutsuTrial")
+	void InitializeCanonJutsuRegistry();
+
 	// Register Jutsu Trial Record
 	UFUNCTION(BlueprintCallable, Category = "EchoesOfShinobi|JutsuTrial")
 	void RegisterJutsuRecord(const FEOSJutsuTrialRecord& InRecord);

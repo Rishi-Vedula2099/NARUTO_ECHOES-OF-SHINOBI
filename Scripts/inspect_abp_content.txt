@@ -1,0 +1,4 @@
+ABP: <Object '/Game/Characters/Naruto/Anims/ABP_Naruto_Genin.ABP_Naruto_Genin' (0x000001DBF7F4CB00) Class 'AnimBlueprint'>
+Target Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x000001DBE429D800) Class 'Skeleton'>
+Properties of ABP:
+  status = <BlueprintStatus.BS_UP_TO_DATE: 3>

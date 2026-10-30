@@ -42,8 +42,44 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Village")
 	int32 TotalFoliageCount = 0;
 
+	// VISUAL-RECTIFICATION-MASTER-1.1: production asset soft references (registry-canonical paths).
+	// These resolve at BeginPlay; until authored meshes are imported into /Game/, the builder
+	// keeps Engine/BasicShapes graybox strictly tagged TECHNICAL_DEBUG_ASSET and logs
+	// deterministic MISSING_PRODUCTION_ASSET errors. Visual runtime activation stays BLOCKED.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_ResidenceA; // /Game/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_A
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_ResidenceB; // /Game/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_B
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_IchirakuRamen; // /Game/Environment/Konoha/Buildings/Meshes/SM_Bld_IchirakuRamen
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_RoadStone; // /Game/Environment/Konoha/Roads/SM_KonohaRoadStone
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_StoneLantern; // /Game/Environment/Konoha/Props/Meshes/SM_Prop_StoneLantern_01
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Village|ProductionAssets")
+	TSoftObjectPtr<UStaticMesh> ProductionMesh_SakuraTree; // /Game/Environment/Konoha/Foliage/Meshes/SM_Veg_Sakura_Bloom
+
+	// True when ALL production slots resolved to authored /Game/ packages (runtime activation unblocked).
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Village")
+	bool bUsingProductionMeshes = false;
+
+	// Slot IDs that failed to resolve; drives the TECHNICAL_DEBUG_ASSET tag & MISSING_PRODUCTION_ASSET logs.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Village")
+	TArray<FString> MissingProductionMeshIDs;
+
 protected:
 	virtual void BeginPlay() override;
+
+	/** Attempt to bind every production soft reference; returns true only if ALL slots resolved. */
+	bool ResolveProductionMeshes();
+
+	/** Bind resolved production meshes onto the instanced components (graybox stays as fallback). */
+	void ApplyResolvedProductionMeshes();
 
 	void BuildAnimeDaylightLighting();
 	void BuildHokageRockMonumentVista();

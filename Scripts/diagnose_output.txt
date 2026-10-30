@@ -1,0 +1,19 @@
+=== DIAGNOSING L_VisualAssetSmokeTest ===
+Total Actors: 30
+[DirectionalLight] DirLight_Konoha_5400K at <Struct 'Vector' (0x00000186E71731C0) {x: 0.000000, y: 0.000000, z: 2000.000000}> | Intensity=75000.0 | Color=<Struct 'Color' (0x00000186E67E56B8) {b: 215, g: 240, r: 255, a: 255}>
+[PlayerStart] PlayerStart_NarutoGenin at <Struct 'Vector' (0x00000186E71731C0) {x: 0.000000, y: 200.000000, z: 10.000000}>
+[SkyLight] SkyLight_AnimeAzureFill at <Struct 'Vector' (0x00000186E7171730) {x: 0.000000, y: 0.000000, z: 1500.000000}> | Intensity=1.5
+[PostProcessVolume] PostProcess_ProvingBox at <Struct 'Vector' (0x00000186E7172950) {x: 0.000000, y: 0.000000, z: 0.000000}> | Unbound=False
+[Swatch] Swatch_Skin at <Struct 'Vector' (0x00000186E71731C0) {x: -300.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Hair at <Struct 'Vector' (0x00000186E7172950) {x: -200.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Tracksuit at <Struct 'Vector' (0x00000186E7171730) {x: -100.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Navy at <Struct 'Vector' (0x00000186E71731C0) {x: 0.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Collar at <Struct 'Vector' (0x00000186E7171730) {x: 100.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_CedarWood at <Struct 'Vector' (0x00000186E7172950) {x: 200.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_RoofTile at <Struct 'Vector' (0x00000186E71731C0) {x: 300.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Cobblestone at <Struct 'Vector' (0x00000186E7171730) {x: 400.000000, y: -200.000000, z: 60.000000}>
+[Camera] Camera_ProvingBox_Swatches (CameraActor) at <Struct 'Vector' (0x00000186E7172950) {x: 100.000000, y: -750.000000, z: 140.000000}>
+[Swatch] Swatch_Metal at <Struct 'Vector' (0x00000186E71731C0) {x: 150.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Stone at <Struct 'Vector' (0x00000186E7172950) {x: 450.000000, y: -200.000000, z: 60.000000}>
+[Swatch] Swatch_Foliage at <Struct 'Vector' (0x00000186E71731C0) {x: 550.000000, y: -200.000000, z: 60.000000}>
+=== DIAGNOSIS COMPLETE ===

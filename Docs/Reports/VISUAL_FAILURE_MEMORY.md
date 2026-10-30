@@ -141,3 +141,27 @@
   1. Reject all procedural primitive concatenations for hero characters and hero architecture.
   2. Enforce Phase Gate progression requiring side-by-side reference verification before declaring visual completion.
   3. Character runtime materials must be mapped dynamically by material slot name rather than hardcoded index arrays.
+
+---
+
+## VF-011 — Proving Ground Map Misdirection & Missing C++ Runtime Skeletal Mesh Assignment
+- **Date:** 2026-10-30
+- **Screenshot Evidence:** `runtime_smoke_test_failure_baseline.jpg` (`media_1793283768094_460b3b9b.jpg`): Grey untextured proxy character standing in front of floating material spheres, wooden training dummy, and reflective test rails under an unpopulated sky in `L_VisualAssetSmokeTest`.
+- **Classification:** `DEF-001` (Character Mesh Defect) & `DEF-004` (Scene Misdirection)
+- **Root Causes:**
+  1. **Map Misdirection:** Standalone automation launcher dispatched to `L_VisualAssetSmokeTest` (calibration testbed) rather than the primary golden map `L_Konoha_GoldenStreet`.
+  2. **Missing C++ Skeletal Mesh Assignment:** `AEOSCharacterBase::SetupStylizedVisualMesh()` only set relative transform `(0, 0, -96)` and `(0, -90, 0)` but lacked `SetSkeletalMeshAsset(...)` and `SetAnimInstanceClass(...)`, leaving dynamically spawned pawns with fallback/proxy geometry.
+  3. **Unresolved External Linker Symbols:** `ValidateVisualAssetIntegrity`, `ApplyMeshComponentLayout`, `ResolveProductionVisualDefaults`, and `SpawnJutsuVFXAtSocket` were declared in `EOSCharacterBase.h` but lacked function definitions in `EOSCharacterBase.cpp`, breaking UBT compilation.
+  4. **Facial Feature Defect:** Character model lacked facial textures, catchlights, whiskers, and blend shapes.
+- **Fix Applied:**
+  1. Implemented all declared C++ methods in `EOSCharacterBase.cpp`: `ValidateVisualAssetIntegrity(bool)`, `ResolveProductionVisualDefaults()`, `ApplyMeshComponentLayout()`, `SetupStylizedVisualMesh()`, and `SpawnJutsuVFXAtSocket()`.
+  2. Bound canonical soft object paths for `SK_Naruto_Genin`, `ABP_Naruto_Genin`, 7 `MI_Naruto_*` materials, and `NS_Rasengan_Orb_Master` Niagara system in `AEOSCharacterBase::AEOSCharacterBase()`.
+  3. Recompiled `EchoesOfShinobiEditor Win64 Development` via UBT with 0 errors.
+  4. Authored high-resolution 2048x2048 anime facial texture `T_Naruto_Genin_D.tga` and connected to `MI_Naruto_Skin`.
+  5. Synchronized the 7-slot production skeletal mesh across all mesh registry paths (`/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin`, `/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged`, and `/Game/Characters/Naruto/Meshes/SK_Naruto_Genin`).
+  6. Replaced proxy actor in `L_VisualAssetSmokeTest` and spawned hero Naruto in `L_Konoha_GoldenStreet`.
+  7. Rendered native 1080p runtime evidence: `gate2_naruto_face_closeup.png`, `gate2_naruto_three_quarter_fresh.png`, and `gate2_konoha_golden_street_fresh.png`.
+- **Permanent Prevention Rule:**
+  - Never allow standalone launchers to route default execution to `L_VisualAssetSmokeTest`. Default map must permanently remain `/Game/Maps/GoldenTest/L_Konoha_GoldenStreet`.
+  - In `AEOSCharacterBase`, constructor and `SetupStylizedVisualMesh()` must synchronously load and assign production skeletal mesh and material slots.
+  - Automation tests must enforce that `Shinobi->ValidateVisualAssetIntegrity()` returns verdicts for all slots and fails if any placeholder/basic shape is detected.

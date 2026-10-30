@@ -1,0 +1,14 @@
+Imported objects: ["/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin", "/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_PhysicsAsset.SK_Naruto_Genin_PhysicsAsset"]
+SK Mesh: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin' (0x0000020B1382BE00) Class 'SkeletalMesh'>
+Skeleton: <Object '/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Skeleton.SK_Naruto_Genin_Skeleton' (0x0000020B11E45400) Class 'Skeleton'>
+Multi-material mesh has 1 material slots!
+  Slot 0 (Skin) -> MI_Naruto_Skin
+  Slot 1 out of range (slots count = 1)
+  Slot 2 out of range (slots count = 1)
+  Slot 3 out of range (slots count = 1)
+  Slot 4 out of range (slots count = 1)
+  Slot 5 out of range (slots count = 1)
+  Slot 6 out of range (slots count = 1)
+Compiled ABP with skeleton SK_Naruto_Genin_Skeleton!
+Configured SK_Naruto_Genin_ProvingActor upright at (0, -450, 0) facing camera!
+Saved /Game/Maps/VisualSmoke/L_VisualAssetSmokeTest successfully!

@@ -2,11 +2,14 @@
 #include "../../Public/AI/EOSVillageNPC.h"
 #include "../../Public/Combat/EOSTrainingDummy.h"
 #include "Components/DirectionalLightComponent.h"
+#include "Engine/DirectionalLight.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/SkyAtmosphereComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Engine/StaticMeshActor.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
@@ -85,10 +88,97 @@ void AEOSKonohaVillageBuilder::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// If the world already contains authored visual meshes (e.g. Ichiraku Ramen, Cobblestones, Buildings),
+	// do NOT generate procedural basic cubes/cylinders over the world!
+	TArray<AActor*> FoundStaticMeshes;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), FoundStaticMeshes);
+	int32 StaticMeshCount = 0;
+	for (AActor* Act : FoundStaticMeshes)
+	{
+		if (Act && Act != this && Act->IsA(AStaticMeshActor::StaticClass()))
+		{
+			StaticMeshCount++;
+		}
+	}
+
+	if (StaticMeshCount >= 5)
+	{
+		UE_LOG(LogEOSCore, Log, TEXT("AEOSKonohaVillageBuilder: World already contains %d authored StaticMeshActors. Disabling procedural instanced graybox to preserve authored visual quality."), StaticMeshCount);
+
+		// PHASE 1 FIX: Only disable OUR lighting if the authored map already has its own.
+		// Previously this unconditionally killed all lighting, causing BLACK VOID when
+		// the authored map had meshes but no dedicated light actors. (VF-004)
+		TArray<AActor*> ExistingSuns;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), ExistingSuns);
+		const bool bMapHasOwnLighting = ExistingSuns.Num() > 0;
+
+		if (bMapHasOwnLighting)
+		{
+			UE_LOG(LogEOSCore, Log, TEXT("AEOSKonohaVillageBuilder: Authored map has %d DirectionalLight(s). Disabling builder lighting to avoid conflicts."), ExistingSuns.Num());
+			if (DirectionalSunLight)
+			{
+				DirectionalSunLight->SetVisibility(false);
+				DirectionalSunLight->SetCastShadows(false);
+				DirectionalSunLight->SetIntensity(0.0f);
+			}
+			if (SkyLight)
+			{
+				SkyLight->SetVisibility(false);
+				SkyLight->SetIntensity(0.0f);
+			}
+			if (HeightFog)
+			{
+				HeightFog->SetVisibility(false);
+			}
+		}
+		else
+		{
+			UE_LOG(LogEOSCore, Log, TEXT("AEOSKonohaVillageBuilder: Authored map has NO dedicated lighting. Builder will provide anime daylight lighting."));
+			// Keep our lighting active — the authored map needs it!
+			BuildAnimeDaylightLighting();
+		}
+
+		// Disable procedural geometry (graybox) but keep lighting/sky.
+		// The authored map already has real buildings/props.
+		return;
+	}
+
 	UE_LOG(LogEOSCore, Log, TEXT("=================================================="));
 	UE_LOG(LogEOSCore, Log, TEXT("CONSTRUCTING AUTHORED KONOHA VERTICAL-SLICE DISTRICT"));
 	UE_LOG(LogEOSCore, Log, TEXT("Target Scale: 500m x 500m | Budget: GTX 1650 60 FPS"));
 	UE_LOG(LogEOSCore, Log, TEXT("=================================================="));
+
+	// Check if world already has an authored directional light to avoid conflicting suns
+	TArray<AActor*> FoundSuns;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), FoundSuns);
+	for (AActor* SunActor : FoundSuns)
+	{
+		if (SunActor != this && DirectionalSunLight)
+		{
+			DirectionalSunLight->SetVisibility(false);
+			DirectionalSunLight->SetCastShadows(false);
+			DirectionalSunLight->SetIntensity(0.0f);
+			break;
+		}
+	}
+
+	bUsingProductionMeshes = ResolveProductionMeshes();
+	if (!bUsingProductionMeshes)
+	{
+		UE_LOG(LogEOSCore, Warning, TEXT("=================================================="));
+		UE_LOG(LogEOSCore, Warning, TEXT("MISSING_PRODUCTION_ASSET: %d Konoha production mesh slot(s) unresolved:"), MissingProductionMeshIDs.Num());
+		for (const FString& MissingID : MissingProductionMeshIDs)
+		{
+			UE_LOG(LogEOSCore, Warning, TEXT("  - %s (authored /Game/ mesh not imported yet)"), *MissingID);
+		}
+		UE_LOG(LogEOSCore, Warning, TEXT("District rendering as TECHNICAL_DEBUG_ASSET graybox. VISUAL RUNTIME ACTIVATION: BLOCKED UNTIL REQUIRED ASSETS EXIST."));
+		UE_LOG(LogEOSCore, Warning, TEXT("=================================================="));
+	}
+	else
+	{
+		UE_LOG(LogEOSCore, Log, TEXT("PRODUCTION_READY: All Konoha production meshes resolved. Authored district active."));
+		ApplyResolvedProductionMeshes();
+	}
 
 	BuildAnimeDaylightLighting();
 	BuildHokageRockMonumentVista();
@@ -105,13 +195,96 @@ void AEOSKonohaVillageBuilder::BeginPlay()
 		TotalBuildingCount, TotalPropCount, TotalFoliageCount);
 }
 
+bool AEOSKonohaVillageBuilder::ResolveProductionMeshes()
+{
+	// Step 7-11 soft-reference resolution pass: every slot binds its registry-canonical
+	// /Game/ path when authored, or is reported as MISSING_PRODUCTION_ASSET otherwise.
+	MissingProductionMeshIDs.Empty();
+
+	auto ResolveSlot = [this](TSoftObjectPtr<UStaticMesh>& Slot, const TCHAR* AssetPath, const TCHAR* SlotID) -> bool
+	{
+		if (Slot.IsNull())
+		{
+			Slot = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(AssetPath));
+		}
+
+		if (UStaticMesh* LoadedMesh = Slot.LoadSynchronous())
+		{
+			UE_LOG(LogEOSCore, Log, TEXT("PRODUCTION_ASSET_BOUND: %s -> %s"), SlotID, *LoadedMesh->GetName());
+			return true;
+		}
+
+		MissingProductionMeshIDs.Add(SlotID);
+		return false;
+	};
+
+	bool bAllResolved = true;
+	bAllResolved &= ResolveSlot(ProductionMesh_ResidenceA, TEXT("/Game/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_A"), TEXT("SM_BLD_KONOHA_RESIDENCE_A"));
+	bAllResolved &= ResolveSlot(ProductionMesh_ResidenceB, TEXT("/Game/Environment/Konoha/Buildings/Meshes/SM_Bld_Konoha_Residence_B"), TEXT("SM_BLD_KONOHA_RESIDENCE_B"));
+	bAllResolved &= ResolveSlot(ProductionMesh_IchirakuRamen, TEXT("/Game/Environment/Konoha/Buildings/Meshes/SM_Bld_IchirakuRamen"), TEXT("SM_BLD_KONOHA_ICHIRAKU_RAMEN"));
+	bAllResolved &= ResolveSlot(ProductionMesh_RoadStone, TEXT("/Game/Environment/Konoha/Roads/Meshes/SM_Road_Paved_01"), TEXT("SM_KON_ROAD_MAIN_STONE"));
+	bAllResolved &= ResolveSlot(ProductionMesh_StoneLantern, TEXT("/Game/Environment/Konoha/Props/Meshes/SM_Prop_StoneLantern_01"), TEXT("SM_PROP_KONOHA_LANTERN_STONE"));
+	bAllResolved &= ResolveSlot(ProductionMesh_SakuraTree, TEXT("/Game/Environment/Konoha/Foliage/Meshes/SM_Veg_Sakura_Bloom"), TEXT("SM_VEG_KONOHA_CHERRY_BLOSSOM"));
+
+	return bAllResolved;
+}
+
+void AEOSKonohaVillageBuilder::ApplyResolvedProductionMeshes()
+{
+	// Bind authored meshes onto the instanced tiers when available; Engine/BasicShapes
+	// remain strictly as tagged TECHNICAL_DEBUG_ASSET fallbacks (never presented as final).
+	if (UStaticMesh* ResidenceA = ProductionMesh_ResidenceA.LoadSynchronous())
+	{
+		BuildingWallsInstanced->SetStaticMesh(ResidenceA);
+	}
+	if (UStaticMesh* ResidenceB = ProductionMesh_ResidenceB.LoadSynchronous())
+	{
+		RoofTilesInstanced->SetStaticMesh(ResidenceB);
+	}
+	if (UStaticMesh* RoadStone = ProductionMesh_RoadStone.LoadSynchronous())
+	{
+		StoneRoadInstanced->SetStaticMesh(RoadStone);
+	}
+	if (UStaticMesh* Lantern = ProductionMesh_StoneLantern.LoadSynchronous())
+	{
+		LanternsInstanced->SetStaticMesh(Lantern);
+	}
+	if (UStaticMesh* Sakura = ProductionMesh_SakuraTree.LoadSynchronous())
+	{
+		SakuraTreesInstanced->SetStaticMesh(Sakura);
+	}
+}
+
 void AEOSKonohaVillageBuilder::BuildAnimeDaylightLighting()
 {
-	// Configure stepped anime lighting profile
+	// PHASE 1 FIX: Correct anime daylight profile.
+	// VF-004 ROOT CAUSE: Previous intensity was 65000.0f which caused blinding white blowout.
+	// Target: Warm ~5400K golden afternoon daylight, soft readable shadows, blue sky fill.
 	if (DirectionalSunLight)
 	{
-		DirectionalSunLight->SetIntensity(5.0f);
-		DirectionalSunLight->SetLightColor(FColor(255, 242, 226));
+		// 8.0 lux with warm 5400K color — the correct range for Unreal directional light
+		// to produce warm anime daylight without blowing out materials.
+		DirectionalSunLight->SetIntensity(8.0f);
+		DirectionalSunLight->SetLightColor(FColor(255, 242, 226)); // Warm ~5400K anime sunlight
+		DirectionalSunLight->SetRelativeRotation(FRotator(-45.0f, 35.0f, 0.0f)); // Golden afternoon angle
+		DirectionalSunLight->SetCastShadows(true);
+		DirectionalSunLight->SetVisibility(true);
+	}
+
+	if (SkyLight)
+	{
+		// Blue-tinted sky fill — provides ambient light so shadows never crush to pure black
+		SkyLight->SetIntensity(1.8f);
+		SkyLight->SetLightColor(FColor(195, 225, 255)); // Cool blue skylight fill
+		SkyLight->SetVisibility(true);
+	}
+
+	if (HeightFog)
+	{
+		// Subtle atmospheric depth fog — warm haze, never obscuring
+		HeightFog->SetFogDensity(0.004f);
+		HeightFog->SetFogInscatteringColor(FLinearColor(0.72f, 0.85f, 0.98f));
+		HeightFog->SetVisibility(true);
 	}
 }
 
