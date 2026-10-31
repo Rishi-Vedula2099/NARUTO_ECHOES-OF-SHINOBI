@@ -1,6 +1,25 @@
-newmtl M_AnimeCel_Master
+# Architectural Material Palette
+newmtl MI_Bld_Ichiraku_Wood
 Ka 1.0 1.0 1.0
-Kd 1.0 0.6 0.1
-Ks 0.1 0.1 0.1
-Ns 32.0
+Kd 1.0 1.0 1.0
+Ks 0.0 0.0 0.0
 d 1.0
+
+newmtl MI_Bld_Ichiraku_Roof
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.0 0.0 0.0
+d 1.0
+
+newmtl MI_Bld_Ichiraku_Noren
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.0 0.0 0.0
+d 1.0
+
+newmtl MI_Prop_PaperLantern
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.0 0.0 0.0
+d 1.0
+

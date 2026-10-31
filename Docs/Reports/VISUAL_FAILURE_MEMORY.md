@@ -165,3 +165,36 @@
   - Never allow standalone launchers to route default execution to `L_VisualAssetSmokeTest`. Default map must permanently remain `/Game/Maps/GoldenTest/L_Konoha_GoldenStreet`.
   - In `AEOSCharacterBase`, constructor and `SetupStylizedVisualMesh()` must synchronously load and assign production skeletal mesh and material slots.
   - Automation tests must enforce that `Shinobi->ValidateVisualAssetIntegrity()` returns verdicts for all slots and fails if any placeholder/basic shape is detected.
+
+---
+
+## VF-012 — Procedural Primitive Concatenation vs. Refined Anime Geometry Standard
+- **Date:** 2026-10-31
+- **Screenshot Evidence:** Procedural concentric ellipse lofts, cone hair spikes, and flat box-stacked buildings in `L_Konoha_GoldenStreet`.
+- **Classification:** `ASSET_DEFECT` / `PRIMITIVE_SUBSTITUTION_DEFECT`
+- **Root Causes:**
+  1. Early scripts generated character models via concentric ellipse lofts (`make_profile_loft`) and basic cones for hair spikes rather than anatomical polygonal facial planes, 3D oral cavity with individual teeth, and faceted hair clumps.
+  2. Architectural models used stacked rectangular prisms (`make_box`) lacking curved terracotta roof tiles (`kawara`), eaves brackets (`tokyō`), sliding lattice shoji screens, or authentic timber joinery.
+  3. The Hokage Monument was placed as a flat 2D plane backdrop instead of an authored 3D sculpted canyon mountain cliff with the four Hokage face reliefs.
+- **Fix Applied:**
+  1. **Refined Hero Character Model (`SK_Naruto_Genin` / `SK_Naruto_Genin_Rigged.glb`):**
+     - Authored `author_refined_production_naruto.py` producing 3,899 clean triangles with 0 degenerate indices and 0 zero-area triangles across 7 production material slots.
+     - 3D oral cavity with upper and lower curved dental arches (individual teeth) and tongue in Naruto's open grin.
+     - Modeled curved metal forehead plate with stamped Konoha crest and 4 corner dome rivets.
+     - 28 faceted anime hair clumps with knife-edge crease ridges catching cel-shading light bands.
+     - High stand-up shearling fleece collar with rolled cylindrical rim, zipper track, and silver teardrop slider.
+     - Tailored orange windbreaker jacket with navy shoulder yokes, elastic waist hem, and back Uzumaki crest.
+     - Rolled-up double-layer wrist cuffs and articulated shinobi hands with palms, thumbs, and knuckles.
+     - Right thigh white medical bandage wraps and black kunai holster pouch with buckle.
+     - Baggy ninja trousers with knee crease folds and rolled ankle cuffs.
+     - Authentic navy sandals with 5 individually sculpted anime toes and rubber tread soles.
+  2. **Refined Japanese Timber Architecture (`SM_Bld_IchirakuRamen`, Residences, Monument):**
+     - Authored `author_refined_konoha_architecture.py` replacing box primitives with post-and-beam cedar frames, mortise-and-tenon joints, recessed dining counter, 4 turned wooden bar stools, 3-panel split noren fabric curtains with wavy folds ("一楽ラーメン"), hanging paper lanterns, and curved terracotta roof tiles.
+     - Authored 3D sculpted canyon cliff with the carved stone face reliefs of Hashirama, Tobirama, Hiruzen, and Minato.
+  3. **Refined Valley of the End Benchmark (`SM_Lnd_ValleyOfTheEnd_Statues`):**
+     - Authored `author_refined_valley_of_the_end.py` depicting Madara Uchiha and Hashirama Senju forming the confrontation hand seal (`対立の印`) across the roaring river gorge waterfall.
+  4. **Runtime Verification:** Captured native 1080p verified frames `ScreenShot00057.png` (`golden_street_runtime_verified.png`) and `ScreenShot00058.png` (`naruto_showcase_runtime_verified.png`).
+- **Permanent Prevention Rule:**
+  - Never generate production characters or buildings by stacking primitive geometric shapes (boxes, cones, cylinders).
+  - Every character must adhere to the 5-component standard (Anatomical Head + Modeled Oral Cavity & Teeth + 4-Rivet Headband + Faceted Anime Hair Clumps + Tailored Cloth Folds & Rolled Cuffs + Exposed Toes Sandals).
+  - Every environment must feature authored timber framing, curved roof tiles, and 3D landmark vistas.

@@ -92,6 +92,21 @@ Before touching any visual system, the agent MUST:
 
 ---
 
+## REGRESSION #007
+
+| Field | Value |
+|---|---|
+| Date | 2026-10-31 |
+| Problem | Character mesh built from procedural ellipse rings; environment architecture composed of stacked box prisms (`make_box`) with flat 2D backdrop plane |
+| Expected | Refined 3D anime character anatomy (modeled 3D teeth in open smile, 4-rivet curved metal plate, 28 faceted hair clumps, tailored jacket with navy yoke and folds, sandals with 5 exposed toes) and authentic Japanese post-and-beam timber architecture with curved tile roofs and 3D Hokage cliff monument |
+| Root Cause | Using parametric shape stacking (`make_profile_loft`, `make_box`, `make_cylinder`) as a placeholder for production modeling |
+| INCORRECT Fix | Modifying camera distance, lighting, or post-process bloom to blur or obscure geometric blockiness |
+| CORRECT Fix | 1. Author polygonal anime character mesh with full 3D oral cavity, teeth arches, 4-rivet forehead protector, knife-edge faceted hair clumps, and 5-toed sandals. 2. Author authentic post-and-beam timber shopfront with recessed counter, 4 turned bar stools, wavy noren, and curved terracotta roof tiles. 3. Author 3D sculpted canyon cliff with 4 Hokage face reliefs. 4. Verify in runtime 1080p rendering. |
+| DO NOT REPEAT | YES |
+| Status | RESOLVED (Verified via ScreenShot00057.png & ScreenShot00058.png) |
+
+---
+
 ## PATTERN RECOGNITION
 
 
