@@ -8,6 +8,7 @@
 
 class UCapsuleComponent;
 class UNiagaraComponent;
+class UStaticMeshComponent;
 
 /**
  * Authoritative Boss Character Actor for NARUTO: ECHOES OF SHINOBI.
@@ -90,6 +91,9 @@ public:
 	bool IsDefeated() const { return EncounterState.CurrentFSMState == EEOSBossState::Defeated; }
 
 	UFUNCTION(BlueprintPure, Category = "EOS|Boss")
+	EEOSBossState GetFSMState() const { return EncounterState.CurrentFSMState; }
+
+	UFUNCTION(BlueprintPure, Category = "EOS|Boss")
 	FString GetBossName() const { return EncounterDefinition.BossName; }
 
 	UFUNCTION(BlueprintPure, Category = "EOS|Boss")
@@ -126,6 +130,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "EOS|Boss|Fairness")
 	bool ValidateHitReactionRespected() const;
 
+	/** Reset all pattern cooldowns (for test orchestration or phase resets). */
+	UFUNCTION(BlueprintCallable, Category = "EOS|Boss|Fairness")
+	void ResetPatternCooldowns();
+
+	/** Update player HUD with current boss health and phase. */
+	void UpdateHUDState();
+
 	// ──── Data ────
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Boss")
@@ -134,8 +145,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Boss")
 	FEOSBossEncounterState EncounterState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Boss|VFX")
+	TObjectPtr<class UNiagaraSystem> WaterDragonVFX;
+
 protected:
 	virtual void BeginPlay() override;
+
+	/** Production 3D visual static mesh component for humanoid boss (Zabuza Momochi) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Visual")
+	UStaticMeshComponent* VisualStaticMeshComponent;
 
 	// FSM Tick Handlers
 	void TickEntrance(float DeltaTime);
@@ -151,7 +169,6 @@ protected:
 	void UpdateStaggerDecay(float DeltaTime);
 	void CheckPhaseTransition();
 	void SelectNextAttackPattern();
-	void UpdateHUDState();
 
 	/** Fairness flags — always false; contract explicitly forbids setting true. */
 	UPROPERTY()

@@ -1,7 +1,18 @@
 #include "../../Public/Combat/EOSBossCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInterface.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
+#include "UObject/ConstructorHelpers.h"
+#include "../../Public/Subsystems/EOSQuestSubsystem.h"
+#include "../../Public/Subsystems/EOSBossEncounterSubsystem.h"
+#include "../../Public/UI/EOSShinobiHUD.h"
+#include "GameFramework/PlayerController.h"
 
 AEOSBossCharacter::AEOSBossCharacter()
 {
@@ -10,6 +21,42 @@ AEOSBossCharacter::AEOSBossCharacter()
 	// Production collision sizing for a humanoid boss
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(42.0f);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+	if (GetMesh())
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	}
+
+	// Production 3D visual static mesh for Zabuza Momochi (StaticMesh)
+	VisualStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualStaticMesh"));
+	VisualStaticMeshComponent->SetupAttachment(RootComponent);
+	VisualStaticMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -96.0f));
+	VisualStaticMeshComponent->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	VisualStaticMeshComponent->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	VisualStaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> ZabuzaMeshRef(
+		TEXT("/Game/Characters/Bosses/Zabuza/Meshes/SK_Zabuza_Executioner"));
+	if (ZabuzaMeshRef.Succeeded())
+	{
+		VisualStaticMeshComponent->SetStaticMesh(ZabuzaMeshRef.Get());
+	}
+
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInterface> EnemyMatRef(
+		TEXT("/Game/Characters/Enemies/Materials/MI_Enemy_Rogue"));
+	if (EnemyMatRef.Succeeded())
+	{
+		VisualStaticMeshComponent->SetMaterial(0, EnemyMatRef.Get());
+	}
+
+	// Authored Water Dragon Niagara VFX
+	static ConstructorHelpers::FObjectFinderOptional<UNiagaraSystem> WaterVortexRef(
+		TEXT("/Game/VFX/Niagara/Jutsu/NS_Suiryuudan_WaterVortex"));
+	if (WaterVortexRef.Succeeded())
+	{
+		WaterDragonVFX = WaterVortexRef.Get();
+	}
 
 	// Set tag for identification
 	Tags.Add(TEXT("Boss"));
@@ -19,6 +66,27 @@ AEOSBossCharacter::AEOSBossCharacter()
 void AEOSBossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Runtime fallback if mesh was not bound in CDO
+	if (VisualStaticMeshComponent && !VisualStaticMeshComponent->GetStaticMesh())
+	{
+		UStaticMesh* LoadedMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Characters/Bosses/Zabuza/Meshes/SK_Zabuza_Executioner")));
+		if (LoadedMesh)
+		{
+			VisualStaticMeshComponent->SetStaticMesh(LoadedMesh);
+			UMaterialInterface* LoadedMat = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, TEXT("/Game/Characters/Enemies/Materials/MI_Enemy_Rogue")));
+			if (LoadedMat)
+			{
+				VisualStaticMeshComponent->SetMaterial(0, LoadedMat);
+			}
+		}
+	}
+
+	// Runtime fallback for Water Dragon VFX
+	if (!WaterDragonVFX)
+	{
+		WaterDragonVFX = Cast<UNiagaraSystem>(StaticLoadObject(UNiagaraSystem::StaticClass(), nullptr, TEXT("/Game/VFX/Niagara/Jutsu/NS_Suiryuudan_WaterVortex")));
+	}
 }
 
 void AEOSBossCharacter::InitializeFromEncounterDefinition(const FEOSBossEncounterDefinition& InDefinition)
@@ -84,15 +152,18 @@ bool AEOSBossCharacter::TransitionToState(EEOSBossState NewState)
 		bValidTransition = (NewState == EEOSBossState::Telegraph ||
 			NewState == EEOSBossState::Repositioning ||
 			NewState == EEOSBossState::HitReaction ||
+			NewState == EEOSBossState::Staggered ||
 			NewState == EEOSBossState::PhaseTransition ||
 			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::Telegraph:
 		bValidTransition = (NewState == EEOSBossState::Attacking ||
-			NewState == EEOSBossState::HitReaction);
+			NewState == EEOSBossState::HitReaction ||
+			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::Attacking:
-		bValidTransition = (NewState == EEOSBossState::Recovery);
+		bValidTransition = (NewState == EEOSBossState::Recovery ||
+			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::Recovery:
 		bValidTransition = (NewState == EEOSBossState::Idle ||
@@ -103,7 +174,8 @@ bool AEOSBossCharacter::TransitionToState(EEOSBossState NewState)
 	case EEOSBossState::Repositioning:
 		bValidTransition = (NewState == EEOSBossState::Idle ||
 			NewState == EEOSBossState::Telegraph ||
-			NewState == EEOSBossState::HitReaction);
+			NewState == EEOSBossState::HitReaction ||
+			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::HitReaction:
 		bValidTransition = (NewState == EEOSBossState::Idle ||
@@ -117,7 +189,8 @@ bool AEOSBossCharacter::TransitionToState(EEOSBossState NewState)
 			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::PhaseTransition:
-		bValidTransition = (NewState == EEOSBossState::Idle);
+		bValidTransition = (NewState == EEOSBossState::Idle ||
+			NewState == EEOSBossState::Defeated);
 		break;
 	case EEOSBossState::Defeated:
 		bValidTransition = false; // Terminal state
@@ -139,6 +212,37 @@ bool AEOSBossCharacter::TransitionToState(EEOSBossState NewState)
 		*EncounterDefinition.BossName,
 		static_cast<int32>(OldState), static_cast<int32>(NewState),
 		EncounterState.CurrentPhase, EncounterState.CurrentHP, EncounterState.MaxHP);
+
+	if (NewState == EEOSBossState::Defeated)
+	{
+		if (UWorld* World = GetWorld())
+		{
+			if (UGameInstance* GI = World->GetGameInstance())
+			{
+				if (UEOSQuestSubsystem* QuestSys = GI->GetSubsystem<UEOSQuestSubsystem>())
+				{
+					if (QuestSys->GetQuestStatus(TEXT("QUEST_HINATA_OUTSKIRTS_INVESTIGATION")) == EEOSQuestState::Active)
+					{
+						QuestSys->UpdateObjectiveProgress(TEXT("QUEST_HINATA_OUTSKIRTS_INVESTIGATION"), TEXT("OBJ_DEFEAT_ZABUZA_MOMOCHI"), true);
+						UE_LOG(LogTemp, Log, TEXT("[EOS][BOSS] Objective OBJ_DEFEAT_ZABUZA_MOMOCHI marked COMPLETE upon boss defeat."));
+					}
+				}
+				if (APlayerController* PC = World->GetFirstPlayerController())
+				{
+					if (AEOSShinobiHUD* ShinobiHUD = Cast<AEOSShinobiHUD>(PC->GetHUD()))
+					{
+						ShinobiHUD->SetMissionInfo(
+							TEXT("INVESTIGATION OF THE OUTSKIRTS MIST"),
+							TEXT("Zabuza Defeated! Return to Hinata at Ichiraku Ramen"),
+							TEXT("2 / 2 Objectives")
+						);
+						ShinobiHUD->ShowJutsuBanner(TEXT("BOSS DEFEATED! RETURN TO HINATA AT ICHIRAKU RAMEN"), 5.0f);
+						ShinobiHUD->ClearTargetBossInfo();
+					}
+				}
+			}
+		}
+	}
 
 	return true;
 }
@@ -177,6 +281,12 @@ bool AEOSBossCharacter::TransitionToPhase(int32 TargetPhase)
 
 bool AEOSBossCharacter::ExecuteAttackPattern(const FString& PatternID)
 {
+	if (EncounterState.CurrentFSMState == EEOSBossState::Staggered || EncounterState.StaggerState.bIsStaggered)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[EOS][BOSS] Blocked attack pattern %s: boss is currently STAGGERED"), *PatternID);
+		return false;
+	}
+
 	// Contract Section 23: Bosses must respect cooldowns
 	float* CooldownPtr = PatternCooldownTimers.Find(PatternID);
 	if (CooldownPtr && *CooldownPtr > 0.0f)
@@ -218,6 +328,24 @@ bool AEOSBossCharacter::ExecuteAttackPattern(const FString& PatternID)
 		*CooldownPtr = Pattern->Cooldown;
 	}
 
+	if (EncounterState.CurrentFSMState == EEOSBossState::Idle ||
+		EncounterState.CurrentFSMState == EEOSBossState::Repositioning)
+	{
+		TransitionToState(EEOSBossState::Telegraph);
+	}
+
+	if (PatternID == TEXT("ZAB_WATER_DRAGON_BARRAGE") && WaterDragonVFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			WaterDragonVFX,
+			GetActorLocation() + FVector(0.0f, 0.0f, 20.0f),
+			GetActorRotation(),
+			FVector(2.5f, 2.5f, 2.5f)
+		);
+		UE_LOG(LogTemp, Log, TEXT("[EOS][BOSS] Spawned NS_Suiryuudan_WaterVortex (2.5x scale) for %s telegraph windup!"), *PatternID);
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("[EOS][BOSS] Executing pattern: %s (%s) — Damage: %.0f, Range: %.0f"),
 		*PatternID, *Pattern->PatternName, Pattern->BaseDamage, Pattern->EffectiveRange);
 
@@ -246,7 +374,9 @@ void AEOSBossCharacter::ApplyStaggerDamage(float StaggerDamageAmount)
 			EncounterState.StaggerState.StaggerDuration);
 
 		// Transition to stagger state if currently in a state that allows it
-		if (EncounterState.CurrentFSMState == EEOSBossState::HitReaction)
+		if (EncounterState.CurrentFSMState == EEOSBossState::HitReaction ||
+			EncounterState.CurrentFSMState == EEOSBossState::Idle ||
+			EncounterState.CurrentFSMState == EEOSBossState::Recovery)
 		{
 			TransitionToState(EEOSBossState::Staggered);
 		}
@@ -286,6 +416,10 @@ void AEOSBossCharacter::ResetEncounter()
 float AEOSBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (ActualDamage <= 0.0f && DamageAmount > 0.0f)
+	{
+		ActualDamage = DamageAmount;
+	}
 
 	if (EncounterState.CurrentFSMState == EEOSBossState::Defeated ||
 		EncounterState.CurrentFSMState == EEOSBossState::Inactive)
@@ -308,11 +442,8 @@ float AEOSBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	// Check for defeat
 	if (EncounterState.CurrentHP <= 0.0f)
 	{
-		// Allow transition from valid states
-		if (EncounterState.CurrentFSMState == EEOSBossState::Idle ||
-			EncounterState.CurrentFSMState == EEOSBossState::Recovery ||
-			EncounterState.CurrentFSMState == EEOSBossState::HitReaction ||
-			EncounterState.CurrentFSMState == EEOSBossState::Staggered)
+		if (EncounterState.CurrentFSMState != EEOSBossState::Inactive &&
+			EncounterState.CurrentFSMState != EEOSBossState::Defeated)
 		{
 			TransitionToState(EEOSBossState::Defeated);
 		}
@@ -389,13 +520,19 @@ void AEOSBossCharacter::TickEntrance(float DeltaTime)
 
 void AEOSBossCharacter::TickIdle(float DeltaTime)
 {
-	// After 1.5s idle, select and telegraph next attack
+	if (EncounterState.StaggerState.bIsStaggered)
+	{
+		TransitionToState(EEOSBossState::Staggered);
+		return;
+	}
+
+	// After 1.5s idle, evaluate player distance + cooldowns and execute next valid pattern
 	if (CurrentStateTimer >= 1.5f)
 	{
 		SelectNextAttackPattern();
 		if (!EncounterState.ActivePatternID.IsEmpty())
 		{
-			TransitionToState(EEOSBossState::Telegraph);
+			ExecuteAttackPattern(EncounterState.ActivePatternID);
 		}
 	}
 }
@@ -519,6 +656,7 @@ void AEOSBossCharacter::CheckPhaseTransition()
 
 void AEOSBossCharacter::SelectNextAttackPattern()
 {
+	EncounterState.ActivePatternID.Empty();
 	TArray<FEOSBossAttackPattern> Available = GetCurrentPhaseAttackPatterns();
 
 	// Filter by cooldown availability
@@ -526,24 +664,84 @@ void AEOSBossCharacter::SelectNextAttackPattern()
 	for (const FEOSBossAttackPattern& Pattern : Available)
 	{
 		const float* CooldownPtr = PatternCooldownTimers.Find(Pattern.PatternID);
-		if (CooldownPtr && *CooldownPtr <= 0.0f)
+		if (!CooldownPtr || *CooldownPtr <= 0.0f)
 		{
 			Ready.Add(Pattern);
 		}
 	}
 
-	if (Ready.Num() > 0)
+	if (Ready.Num() == 0)
 	{
-		// Simple weighted random selection based on range to player (future: use EQS)
-		int32 Index = FMath::RandRange(0, Ready.Num() - 1);
-		EncounterState.ActivePatternID = Ready[Index].PatternID;
+		return;
 	}
+
+	// Evaluate distance to player pawn so melee patterns are not picked when out of range
+	float PlayerDist = 0.0f;
+	TArray<FEOSBossAttackPattern> InRangeReady;
+	if (UWorld* World = GetWorld())
+	{
+		if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0))
+		{
+			PlayerDist = FVector::Dist(GetActorLocation(), PlayerPawn->GetActorLocation());
+			for (const FEOSBossAttackPattern& Pattern : Ready)
+			{
+				if (Pattern.EffectiveRange >= PlayerDist)
+				{
+					InRangeReady.Add(Pattern);
+				}
+			}
+		}
+	}
+
+	const TArray<FEOSBossAttackPattern>& Pool = (InRangeReady.Num() > 0) ? InRangeReady : Ready;
+	const int32 Index = FMath::RandRange(0, Pool.Num() - 1);
+	EncounterState.ActivePatternID = Pool[Index].PatternID;
+
+	UE_LOG(LogTemp, Log, TEXT("[EOS][BOSS] Distance=%.0fcm -> Selected Ready Pattern: %s (Range=%.0fcm)"),
+		PlayerDist, *EncounterState.ActivePatternID, Pool[Index].EffectiveRange);
 }
 
 void AEOSBossCharacter::UpdateHUDState()
 {
-	// HUD update is handled by the encounter subsystem pushing data to HUD
-	// Boss actor only maintains its own state — HUD sync is external.
+	UWorld* World = GetWorld();
+	APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
+	AEOSShinobiHUD* ShinobiHUD = PC ? Cast<AEOSShinobiHUD>(PC->GetHUD()) : nullptr;
+	if (!ShinobiHUD)
+	{
+		return;
+	}
+
+	FString PhaseLabel;
+	if (EncounterState.StaggerState.bIsStaggered)
+	{
+		PhaseLabel = FString::Printf(TEXT("Demon of the Hidden Mist (Phase %d - STAGGERED!)"), EncounterState.CurrentPhase);
+	}
+	else if (EncounterState.CurrentPhase == 2)
+	{
+		PhaseLabel = TEXT("Demon of the Hidden Mist (Phase 2 - Hidden Mist)");
+	}
+	else if (EncounterState.CurrentPhase >= 3)
+	{
+		PhaseLabel = TEXT("Demon of the Hidden Mist (Phase 3 - Berserk)");
+	}
+	else
+	{
+		PhaseLabel = TEXT("Demon of the Hidden Mist (Phase 1)");
+	}
+
+	const float StaggerRatio = (EncounterState.StaggerState.StaggerThreshold > 0.0f)
+		? FMath::Clamp(EncounterState.StaggerState.CurrentStaggerDamage / EncounterState.StaggerState.StaggerThreshold, 0.0f, 1.0f)
+		: 0.0f;
+
+	ShinobiHUD->SetTargetBossExtendedInfo(
+		EncounterDefinition.BossName.IsEmpty() ? TEXT("Zabuza Momochi") : EncounterDefinition.BossName,
+		PhaseLabel,
+		EncounterState.GetHealthPercent(),
+		EncounterState.CurrentPhase,
+		FMath::Max(1, EncounterDefinition.Phases.Num()),
+		StaggerRatio,
+		EncounterState.StaggerState.bIsStaggered
+	);
 }
 
 FEOSBossEncounterResult AEOSBossCharacter::GenerateEncounterResult() const
@@ -606,4 +804,12 @@ bool AEOSBossCharacter::ValidateHitReactionRespected() const
 	}
 	// If in any other valid state, no violation
 	return true;
+}
+
+void AEOSBossCharacter::ResetPatternCooldowns()
+{
+	for (auto& Pair : PatternCooldownTimers)
+	{
+		Pair.Value = 0.0f;
+	}
 }
