@@ -381,12 +381,13 @@ bool FEOSPhase13Tests::TestCompleteUIVerticalSlice()
 
 bool FEOSPhase13Tests::TestCameraAndMovementProfiles()
 {
-	// 1. Camera Profile Verification
+	// 1. Camera Profile Verification (Calibrated to EOS Visual DNA ~28% Screen Height)
 	FEOSCameraProfile CamProfile;
-	bool bCamDefault = (CamProfile.TargetArmLength == 320.0f || CamProfile.TargetArmLength == 380.0f) &&
-	                   (CamProfile.FieldOfView == 80.0f) &&
+	bool bCamDefault = (CamProfile.TargetArmLength == 460.0f) &&
+	                   (CamProfile.FieldOfView == 68.0f) &&
 	                   (CamProfile.CameraLagSpeed == 12.0f) &&
-	                   CamProfile.bEnableCameraLag;
+	                   CamProfile.bEnableCameraLag &&
+	                   (CamProfile.TargetHeightScreenFraction == 0.28f);
 
 	CamProfile.SetMode(EEOSCameraMode::Boss);
 	bool bCamBoss = (CamProfile.TargetArmLength == 520.0f) &&
@@ -395,6 +396,11 @@ bool FEOSPhase13Tests::TestCameraAndMovementProfiles()
 	CamProfile.SetMode(EEOSCameraMode::Combat);
 	bool bCamCombat = (CamProfile.TargetArmLength == 320.0f) &&
 	                  (CamProfile.FieldOfView == 85.0f);
+
+	CamProfile.SetMode(EEOSCameraMode::ArtReview);
+	bool bCamArtReview = (CamProfile.TargetArmLength == 420.0f) &&
+	                     (CamProfile.FieldOfView == 75.0f) &&
+	                     (CamProfile.CameraLagSpeed == 0.0f);
 
 	// 2. Movement Profile Verification
 	FEOSMovementProfile MoveProfile;
@@ -413,7 +419,7 @@ bool FEOSPhase13Tests::TestCameraAndMovementProfiles()
 	             (PerfProfile.ProcessWorkingSetBudgetMB <= 6000.0f) &&
 	             (PerfProfile.DedicatedVRAMBudgetMB <= 3200.0f);
 
-	bool bPass = bCamDefault && bCamBoss && bCamCombat && bMove && bPerf;
+	bool bPass = bCamDefault && bCamBoss && bCamCombat && bCamArtReview && bMove && bPerf;
 	UE_LOG(LogEOSUI, Log, TEXT("[P13 TEST] Camera, Movement & GTX 1650 Performance Profiles: %s"), bPass ? TEXT("PASS") : TEXT("FAIL"));
 	return bPass;
 }
