@@ -56,3 +56,27 @@ EEOSSageCompatibility UEOSProgressionSubsystem::EvaluateSageCompatibility(FEOSSt
 
 	return EEOSSageCompatibility::TRAINABLE;
 }
+
+int32 UEOSProgressionSubsystem::GetRequiredCumulativeEXPForLevel(int32 Level) const
+{
+	if (Level <= 1) return 0;
+	if (Level == 2) return 200;
+	if (Level == 3) return 500;
+	if (Level == 4) return 850;
+	if (Level == 5) return 1200;
+
+	// Scaling for levels beyond 5: +400 EXP per additional level
+	return 1200 + (Level - 5) * 400;
+}
+
+int32 UEOSProgressionSubsystem::CalculateLevelFromCumulativeEXP(int32 CumulativeEXP) const
+{
+	if (CumulativeEXP < 200) return 1;
+	if (CumulativeEXP < 500) return 2;
+	if (CumulativeEXP < 850) return 3;
+	if (CumulativeEXP < 1200) return 4;
+
+	// Level 5 and above
+	return 5 + (CumulativeEXP - 1200) / 400;
+}
+

@@ -49,6 +49,7 @@ public:
 	// Pity Tracking & State
 	// -------------------------------------------------------------
 	int32 GetPityCount(const FString& BannerID) const;
+	void SetPityCount(const FString& BannerID, int32 NewPityCount);
 	bool HasGuaranteedFeatured(const FString& BannerID) const;
 	void ResetPity(const FString& BannerID);
 
@@ -58,10 +59,14 @@ public:
 	FEOSSummonResult ExecuteSingleSummon(const FString& BannerID);
 	FEOSSummonResult ExecuteMultiSummon(const FString& BannerID, int32 PullCount = 10);
 
+	/** Sets deterministic PRNG seed for reproducible test roll verification */
+	void SetDeterministicSeed(int32 NewSeed);
+
 	// -------------------------------------------------------------
 	// Collection & Inventory Query
 	// -------------------------------------------------------------
 	bool IsCharacterOwned(const FString& CharacterID) const;
+	void SetCharacterOwned(const FString& CharacterID, bool bOwned = true);
 	int32 GetCharacterShards(const FString& CharacterID) const;
 	const TArray<FEOSSummonResult>& GetSummonHistory() const { return SummonHistory; }
 
@@ -90,4 +95,8 @@ private:
 	/** Transaction audit trail */
 	TArray<FEOSSummonResult> SummonHistory;
 	int32 TransactionCounter = 1000;
+
+	/** Deterministic seed stream for testing */
+	FRandomStream GachaRandomStream;
+	bool bUseDeterministicSeed = false;
 };

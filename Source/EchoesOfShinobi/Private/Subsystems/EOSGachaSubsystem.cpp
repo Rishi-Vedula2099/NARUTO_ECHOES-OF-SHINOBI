@@ -295,6 +295,11 @@ int32 UEOSGachaSubsystem::GetPityCount(const FString& BannerID) const
 	return 0;
 }
 
+void UEOSGachaSubsystem::SetPityCount(const FString& BannerID, int32 NewPityCount)
+{
+	BannerPityCounters.FindOrAdd(BannerID) = FMath::Max(0, NewPityCount);
+}
+
 bool UEOSGachaSubsystem::HasGuaranteedFeatured(const FString& BannerID) const
 {
 	if (const bool* Found = BannerFeaturedGuarantees.Find(BannerID))
@@ -313,6 +318,18 @@ void UEOSGachaSubsystem::ResetPity(const FString& BannerID)
 bool UEOSGachaSubsystem::IsCharacterOwned(const FString& CharacterID) const
 {
 	return OwnedCharacters.Contains(CharacterID);
+}
+
+void UEOSGachaSubsystem::SetCharacterOwned(const FString& CharacterID, bool bOwned)
+{
+	if (bOwned)
+	{
+		OwnedCharacters.Add(CharacterID);
+	}
+	else
+	{
+		OwnedCharacters.Remove(CharacterID);
+	}
 }
 
 int32 UEOSGachaSubsystem::GetCharacterShards(const FString& CharacterID) const
@@ -393,7 +410,7 @@ FEOSAcquisitionResult UEOSGachaSubsystem::ResolveSinglePullInternal(const FEOSBa
 		}
 		else
 		{
-			int32 PickIdx = (InOutPity + TransactionCounter) % MatchingEntries.Num();
+			int32 PickIdx = bUseDeterministicSeed ? GachaRandomStream.RandRange(0, MatchingEntries.Num() - 1) : ((InOutPity + TransactionCounter) % MatchingEntries.Num());
 			Result.CharacterID = MatchingEntries[PickIdx].CharacterID;
 		}
 	}
@@ -520,4 +537,11 @@ FEOSSummonResult UEOSGachaSubsystem::ExecuteMultiSummon(const FString& BannerID,
 	SummonHistory.Add(Result);
 
 	return Result;
+}
+
+void UEOSGachaSubsystem::SetDeterministicSeed(int32 NewSeed)
+{
+	GachaRandomStream.Initialize(NewSeed);
+	bUseDeterministicSeed = true;
+	UE_LOG(LogEOSData, Log, TEXT("Gacha deterministic seed initialized to: %d"), NewSeed);
 }
