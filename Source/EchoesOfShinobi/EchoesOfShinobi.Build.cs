@@ -29,7 +29,9 @@ public class EchoesOfShinobi : ModuleRules
 			"DeveloperSettings",
 			"UMG",
 			"Niagara",
-			"AssetRegistry"
+			"AssetRegistry",
+			"Json",
+			"JsonUtilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {

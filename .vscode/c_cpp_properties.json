@@ -1,25 +1,24 @@
 {
     "configurations": [
         {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/Source/EchoesOfShinobi/Public",
-                "${workspaceFolder}/Source/EchoesOfShinobi/Public/**",
-                "${workspaceFolder}/Source/EchoesOfShinobi/Private",
-                "${workspaceFolder}/Source/EchoesOfShinobi/Private/**",
-                "${workspaceFolder}/Source/EchoesOfShinobi"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "WITH_ENGINE=1",
-                "ECHOESOFSHINOBI_API="
-            ],
-            "compilerPath": "",
+            "name": "EchoesOfShinobiEditor Editor Win64 Development (EchoesOfShinobi)",
+            "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
             "cStandard": "c17",
             "cppStandard": "c++20",
-            "intelliSenseMode": "windows-msvc-x64"
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": [
+                "C:\\Projects\\NARUTO_ECHOES-OF-SHINOBI\\.vscode\\compileCommands_EchoesOfShinobi.json"
+            ]
+        },
+        {
+            "name": "Win32",
+            "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": [
+                "C:\\Projects\\NARUTO_ECHOES-OF-SHINOBI\\.vscode\\compileCommands_Default.json"
+            ]
         }
     ],
     "version": 4

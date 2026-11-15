@@ -3,6 +3,9 @@
 	"EngineAssociation": "5.8",
 	"Category": "Games",
 	"Description": "NARUTO: ECHOES OF SHINOBI - Free-roam Action RPG Master Architecture",
+	"TargetPlatforms": [
+		"Win64"
+	],
 	"Modules": [
 		{
 			"Name": "EchoesOfShinobi",
@@ -35,6 +38,14 @@
 		},
 		{
 			"Name": "Niagara",
+			"Enabled": true
+		},
+		{
+			"Name": "PythonScriptPlugin",
+			"Enabled": true
+		},
+		{
+			"Name": "EditorScriptingUtilities",
 			"Enabled": true
 		}
 	]
