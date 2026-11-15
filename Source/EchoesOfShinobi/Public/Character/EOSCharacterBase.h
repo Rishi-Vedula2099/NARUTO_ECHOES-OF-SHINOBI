@@ -139,6 +139,50 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "EOS|Combat")
 	void CastSubstitution();
 
+	// Sprint 02 Defensive Toolkit & Combat States
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Combat")
+	bool bIsInvulnerable = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Combat")
+	bool bCanDodge = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Combat")
+	bool bCanSubstitute = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Combat")
+	float DodgeIFrameDuration = 0.25f; // 250ms i-frames
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Combat")
+	float DodgeCooldown = 0.8f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Combat")
+	float SubstitutionCooldown = 4.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|Combat")
+	float SubstitutionDistance = 350.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "EOS|Combat")
+	TWeakObjectPtr<AActor> LastAttackerActor;
+
+	UFUNCTION(BlueprintPure, Category = "EOS|Combat")
+	bool IsInvulnerable() const { return bIsInvulnerable; }
+
+	UFUNCTION(BlueprintPure, Category = "EOS|Combat")
+	bool CanSubstitute() const { return bCanSubstitute; }
+
+	UFUNCTION(BlueprintPure, Category = "EOS|Combat")
+	bool CanDodge() const { return bCanDodge; }
+
+	FTimerHandle TimerHandle_Invulnerability;
+	FTimerHandle TimerHandle_DodgeCooldown;
+	FTimerHandle TimerHandle_SubstitutionCooldown;
+
+	void EndInvulnerability();
+	void ResetDodgeCooldown();
+	void ResetSubstitutionCooldown();
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	UFUNCTION(BlueprintCallable, Category = "EOS|Combat")
 	void CastUltimateAbility();
 

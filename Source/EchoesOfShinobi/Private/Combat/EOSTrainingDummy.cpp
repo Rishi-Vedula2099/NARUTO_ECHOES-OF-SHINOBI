@@ -120,7 +120,6 @@ float AEOSTrainingDummy::TakeDamage(float DamageAmount, struct FDamageEvent cons
 		if (AEOSShinobiHUD* HUD = Cast<AEOSShinobiHUD>(PC->GetHUD()))
 		{
 			HUD->SetTargetBossInfo(TEXT("Kakashi Training Post - Target Board"), GetHealthPercent());
-			HUD->RegisterHit(1, ActualDamage * 1.5f);
 		}
 	}
 

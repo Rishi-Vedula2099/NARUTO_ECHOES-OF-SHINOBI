@@ -11,7 +11,15 @@
 #include "Materials/MaterialInterface.h"
 #include "UObject/SoftObjectPath.h"
 #include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
 #include "../../Public/Combat/EOSTrainingDummy.h"
+#include "../../Public/Combat/EOSHitStopComponent.h"
+#include "../../Public/Combat/EOSKawarimiLog.h"
+#include "../../Public/Combat/EOSShadowClone.h"
+#include "../../Public/Combat/EOSMistScout.h"
+#include "../../Public/Combat/EOSBossCharacter.h"
+#include "../../Public/Framework/EOSPlayerController.h"
+#include "../../Public/UI/EOSShinobiHUD.h"
 #include "../../EchoesOfShinobi.h"
 
 AEOSCharacterBase::AEOSCharacterBase()
@@ -21,6 +29,10 @@ AEOSCharacterBase::AEOSCharacterBase()
 	// Capsule configuration
 	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	if (GetMesh())
+	{
+		GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	}
 
 	// Movement & Rotation configuration: Camera-relative movement driven by MovementProfile
 	bUseControllerRotationPitch = false;
@@ -42,6 +54,8 @@ AEOSCharacterBase::AEOSCharacterBase()
 	CameraBoom->bEnableCameraLag = CameraProfile.bEnableCameraLag;
 	CameraBoom->CameraLagSpeed = CameraProfile.CameraLagSpeed;
 	CameraBoom->bDoCollisionTest = true;
+	CameraBoom->ProbeSize = 4.0f;
+	CameraBoom->TargetOffset = FVector(0.0f, 0.0f, 65.0f);
 
 	// FollowCamera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -78,7 +92,7 @@ void AEOSCharacterBase::ResolveProductionVisualDefaults()
 	VisualProfile.VFXProfileID = TEXT("VFX_NARUTO_DEFAULT");
 
 	// Canonical proof-of-pipeline mesh & ABP (Naruto Genin)
-	VisualProfile.SkeletalMeshAsset = TSoftObjectPtr<USkeletalMesh>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin.SK_Naruto_Genin")));
+	VisualProfile.SkeletalMeshAsset = TSoftObjectPtr<USkeletalMesh>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Meshes/SK_Naruto_Genin_Rigged/SkeletalMeshes/SK_Naruto_Genin_Rigged.SK_Naruto_Genin_Rigged")));
 	VisualProfile.AnimBlueprintClass = TSoftClassPtr<UAnimInstance>(FSoftObjectPath(TEXT("/Game/Characters/Naruto/Anims/ABP_Naruto_Genin.ABP_Naruto_Genin_C")));
 
 	// 7 Canonical Material Slots
@@ -101,6 +115,7 @@ void AEOSCharacterBase::ApplyMeshComponentLayout()
 	{
 		CharMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -96.0f));
 		CharMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+		CharMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	}
 }
 
@@ -174,6 +189,8 @@ void AEOSCharacterBase::ApplyCameraProfile(const FEOSCameraProfile& NewProfile)
 		CameraBoom->SocketOffset = CameraProfile.SocketOffset;
 		CameraBoom->bEnableCameraLag = CameraProfile.bEnableCameraLag;
 		CameraBoom->CameraLagSpeed = CameraProfile.CameraLagSpeed;
+		CameraBoom->ProbeSize = 4.0f;
+		CameraBoom->TargetOffset = FVector(0.0f, 0.0f, 65.0f);
 	}
 	if (FollowCamera)
 	{
@@ -397,8 +414,46 @@ void AEOSCharacterBase::StopSprint()
 	GetCharacterMovement()->MaxWalkSpeed = MovementProfile.RunSpeed;
 }
 
+namespace
+{
+	void ApplyImpactToTarget(AEOSCharacterBase* Attacker, AActor* HitActor, float Damage, float HitStopDuration, float KnockbackStrength, float ComboScore)
+	{
+		if (!Attacker || !HitActor || HitActor == Attacker)
+		{
+			return;
+		}
+
+		UGameplayStatics::ApplyDamage(HitActor, Damage, Attacker->GetController(), Attacker, UDamageType::StaticClass());
+		UEOSHitStopComponent::ApplyHitStopToPair(Attacker, HitActor, HitStopDuration, 0.001f);
+
+		if (ACharacter* HitChar = Cast<ACharacter>(HitActor))
+		{
+			FVector KnockDir = Attacker->GetActorForwardVector();
+			KnockDir.Z = 0.0f;
+			if (!KnockDir.IsNearlyZero())
+			{
+				KnockDir.Normalize();
+				HitChar->LaunchCharacter(KnockDir * KnockbackStrength, false, false);
+			}
+		}
+
+		if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(Attacker->GetController()))
+		{
+			if (AEOSShinobiHUD* HUD = Cast<AEOSShinobiHUD>(PC->GetHUD()))
+			{
+				HUD->RegisterHit(1, ComboScore);
+			}
+		}
+	}
+}
+
 void AEOSCharacterBase::AttackLight()
 {
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
 	UE_LOG(LogEOSCombat, Log, TEXT("AEOSCharacterBase::AttackLight executed. Combo progression triggered."));
 
 	// Melee trace ahead for training dummy or enemy
@@ -411,15 +466,17 @@ void AEOSCharacterBase::AttackLight()
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Pawn, Params))
 	{
-		if (AActor* HitActor = HitResult.GetActor())
-		{
-			UGameplayStatics::ApplyDamage(HitActor, 50.0f, GetController(), this, UDamageType::StaticClass());
-		}
+		ApplyImpactToTarget(this, HitResult.GetActor(), 50.0f, 0.08f, 120.0f, 15.0f);
 	}
 }
 
 void AEOSCharacterBase::AttackHeavy()
 {
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
 	UE_LOG(LogEOSCombat, Log, TEXT("AEOSCharacterBase::AttackHeavy executed. Heavy strike applied."));
 
 	const FVector Start = GetActorLocation();
@@ -431,16 +488,42 @@ void AEOSCharacterBase::AttackHeavy()
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Pawn, Params))
 	{
-		if (AActor* HitActor = HitResult.GetActor())
-		{
-			UGameplayStatics::ApplyDamage(HitActor, 120.0f, GetController(), this, UDamageType::StaticClass());
-		}
+		ApplyImpactToTarget(this, HitResult.GetActor(), 120.0f, 0.12f, 280.0f, 25.0f);
 	}
 }
 
 void AEOSCharacterBase::Dodge()
 {
-	UE_LOG(LogEOSCombat, Log, TEXT("AEOSCharacterBase::Dodge executed - Shunshin rapid step."));
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
+	if (!bCanDodge) return;
+
+	bCanDodge = false;
+	bIsInvulnerable = true;
+
+	if (UWorld* World = GetWorld())
+	{
+		// 250ms i-frame window
+		World->GetTimerManager().SetTimer(
+			TimerHandle_Invulnerability,
+			this,
+			&AEOSCharacterBase::EndInvulnerability,
+			DodgeIFrameDuration,
+			false
+		);
+
+		// Dodge cooldown
+		World->GetTimerManager().SetTimer(
+			TimerHandle_DodgeCooldown,
+			this,
+			&AEOSCharacterBase::ResetDodgeCooldown,
+			DodgeCooldown,
+			false
+		);
+	}
 
 	FVector DodgeDirection = GetLastMovementInputVector();
 	if (DodgeDirection.IsNearlyZero())
@@ -451,19 +534,237 @@ void AEOSCharacterBase::Dodge()
 	DodgeDirection.Normalize();
 
 	LaunchCharacter(DodgeDirection * MovementProfile.DodgeImpulse + FVector(0.0f, 0.0f, 150.0f), true, true);
+
+	if (USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		MeshComp->SetRenderCustomDepth(true);
+		MeshComp->SetCustomDepthStencilValue(252); // Invulnerability / Afterimage flash cue
+	}
+
+	UE_LOG(LogEOSCombat, Log, TEXT("[DODGE] Directional dodge executed: 250ms i-frame active, Direction=%s"),
+		*DodgeDirection.ToString());
+}
+
+void AEOSCharacterBase::EndInvulnerability()
+{
+	bIsInvulnerable = false;
+	if (USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		MeshComp->SetRenderCustomDepth(false);
+	}
+	UE_LOG(LogEOSCombat, Log, TEXT("[DODGE] Invulnerability window expired. Normal vulnerability restored."));
+}
+
+void AEOSCharacterBase::ResetDodgeCooldown()
+{
+	bCanDodge = true;
+}
+
+void AEOSCharacterBase::ResetSubstitutionCooldown()
+{
+	bCanSubstitute = true;
 }
 
 void AEOSCharacterBase::CastSubstitution()
 {
-	UE_LOG(LogEOSCombat, Log, TEXT("AEOSCharacterBase::CastSubstitution executed [ACTION_SUBSTITUTION] - Kawarimi log evasion."));
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
 
-	// Substitution replaces shinobi with wood log and teleports slightly backwards/sideways
-	const FVector EvadeOffset = -GetActorForwardVector() * MovementProfile.SubstitutionDistance + FVector(0.0f, 0.0f, 50.0f);
-	TeleportTo(GetActorLocation() + EvadeOffset, GetActorRotation());
+	if (!bCanSubstitute)
+	{
+		UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI] Substitution still on cooldown."));
+		return;
+	}
+
+	bCanSubstitute = false;
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().SetTimer(
+			TimerHandle_SubstitutionCooldown,
+			this,
+			&AEOSCharacterBase::ResetSubstitutionCooldown,
+			SubstitutionCooldown,
+			false
+		);
+	}
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	const FVector PriorLocation = GetActorLocation();
+	const FRotator PriorRotation = GetActorRotation();
+
+	// 1. Spawn Kawarimi Log at player's previous location
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AEOSKawarimiLog* DecoyLog = World->SpawnActor<AEOSKawarimiLog>(
+		AEOSKawarimiLog::StaticClass(),
+		PriorLocation,
+		PriorRotation,
+		SpawnParams
+	);
+
+	// 2. Determine attacker and desired reposition location (350 cm behind attacker)
+	FVector DesiredLoc;
+	FRotator DesiredRot;
+
+	if (LastAttackerActor.IsValid())
+	{
+		AActor* Attacker = LastAttackerActor.Get();
+		const FVector AttackerLoc = Attacker->GetActorLocation();
+		const FVector AttackerFwd = Attacker->GetActorForwardVector();
+
+		DesiredLoc = AttackerLoc - AttackerFwd * SubstitutionDistance;
+		DesiredRot = (AttackerLoc - DesiredLoc).Rotation();
+	}
+	else
+	{
+		DesiredLoc = PriorLocation - GetActorForwardVector() * SubstitutionDistance;
+		DesiredRot = PriorRotation;
+	}
+
+	// 3. Collision validation & safe fallback
+	FHitResult HitResult;
+	FCollisionQueryParams TraceParams(TEXT("KawarimiRepositionTrace"), false, this);
+	if (DecoyLog)
+	{
+		TraceParams.AddIgnoredActor(DecoyLog);
+	}
+
+	const FVector TraceStart = PriorLocation + FVector(0.0f, 0.0f, 50.0f);
+	const FVector TraceEnd = DesiredLoc + FVector(0.0f, 0.0f, 50.0f);
+
+	FVector SafeDestination = DesiredLoc;
+	if (World->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_WorldStatic, TraceParams))
+	{
+		SafeDestination = HitResult.Location + HitResult.ImpactNormal * 60.0f;
+		SafeDestination.Z = PriorLocation.Z;
+		UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI] Reposition trace blocked; safe fallback adjusted to %s"),
+			*SafeDestination.ToString());
+	}
+
+	// 4. Camera clearance validation behind destination
+	const float DesiredArmLength = CameraBoom ? CameraBoom->TargetArmLength : 420.0f;
+	const FVector CameraPivot = SafeDestination + (CameraBoom ? CameraBoom->SocketOffset : FVector(0.0f, 0.0f, 75.0f));
+	const FVector DesiredCameraPos = CameraPivot - DesiredRot.Vector() * DesiredArmLength;
+
+	FHitResult CamHit;
+	FCollisionQueryParams CamTraceParams(TEXT("KawarimiCameraClearanceTrace"), false, this);
+	if (DecoyLog) CamTraceParams.AddIgnoredActor(DecoyLog);
+	if (LastAttackerActor.IsValid()) CamTraceParams.AddIgnoredActor(LastAttackerActor.Get());
+
+	if (World->SweepSingleByChannel(CamHit, CameraPivot, DesiredCameraPos, FQuat::Identity, ECC_WorldStatic, FCollisionShape::MakeSphere(16.0f), CamTraceParams))
+	{
+		const float AvailableDistance = CamHit.Distance;
+		if (AvailableDistance < 200.0f)
+		{
+			const float NudgeForward = 200.0f - AvailableDistance;
+			SafeDestination += DesiredRot.Vector() * NudgeForward;
+			UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI] Camera clearance constrained (%.1f cm); nudged SafeDestination forward by %.1f cm"),
+				AvailableDistance, NudgeForward);
+		}
+	}
+
+	// 5. Teleport player safely
+	TeleportTo(SafeDestination, DesiredRot);
+
+	// Synchronize Controller rotation so the camera frames the attacker and action
+	if (AController* C = GetController())
+	{
+		C->SetControlRotation(DesiredRot);
+	}
+
+	// Instantly snap camera spring arm location without lag to prevent camera dragging through world geometry
+	if (CameraBoom)
+	{
+		const bool bPrevLag = CameraBoom->bEnableCameraLag;
+		CameraBoom->bEnableCameraLag = false;
+		if (World)
+		{
+			World->GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this, bPrevLag]()
+			{
+				if (CameraBoom)
+				{
+					CameraBoom->bEnableCameraLag = bPrevLag;
+				}
+			}));
+		}
+	}
+
+	// 5. Break enemy target-lock and redirect to the decoy log
+	TArray<AActor*> FoundEnemies;
+	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), FoundEnemies);
+	for (AActor* Enemy : FoundEnemies)
+	{
+		if (!Enemy || Enemy == this || Enemy == DecoyLog) continue;
+		if (Enemy->IsA<AEOSBossCharacter>() || Enemy->ActorHasTag(TEXT("Enemy")))
+		{
+			UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI] Disrupted target-lock of enemy %s -> redirected to Kawarimi Decoy Log."),
+				*Enemy->GetName());
+		}
+	}
+
+	UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI] Substituted! Log at %s, Player repositioned behind attacker to %s (Cooldown: %.1fs)."),
+		*PriorLocation.ToString(), *SafeDestination.ToString(), SubstitutionCooldown);
+
+	const FVector P_start = PriorLocation;
+	const FVector P_att = LastAttackerActor.IsValid() ? LastAttackerActor->GetActorLocation() : PriorLocation;
+	const FVector P_req = DesiredLoc;
+	const FVector P_acc = SafeDestination;
+	const FVector D_actual = P_acc - P_start;
+	const float ActualDisplacement = D_actual.Size();
+
+	UE_LOG(LogEOSCombat, Log, TEXT("[KAWARIMI-FORENSIC] P_start=(X=%.1f,Y=%.1f,Z=%.1f) P_att=(X=%.1f,Y=%.1f,Z=%.1f) P_req=(X=%.1f,Y=%.1f,Z=%.1f) P_acc=(X=%.1f,Y=%.1f,Z=%.1f) D_actual=(X=%.1f,Y=%.1f,Z=%.1f, Len=%.1f cm)"),
+		P_start.X, P_start.Y, P_start.Z,
+		P_att.X, P_att.Y, P_att.Z,
+		P_req.X, P_req.Y, P_req.Z,
+		P_acc.X, P_acc.Y, P_acc.Z,
+		D_actual.X, D_actual.Y, D_actual.Z, ActualDisplacement);
+}
+
+float AEOSCharacterBase::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	if (DamageCauser)
+	{
+		LastAttackerActor = DamageCauser;
+	}
+	else if (EventInstigator && EventInstigator->GetPawn())
+	{
+		LastAttackerActor = EventInstigator->GetPawn();
+	}
+
+	// 1. Invulnerability check (Dodge i-frame 250ms)
+	if (bIsInvulnerable)
+	{
+		UE_LOG(LogEOSCombat, Log, TEXT("[COMBAT] Damage %.1f completely NEGATED by Dodge i-frame window!"), DamageAmount);
+		return 0.0f;
+	}
+
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (ActualDamage <= 0.0f && DamageAmount > 0.0f)
+	{
+		ActualDamage = DamageAmount;
+	}
+
+	RuntimeFramework.Stats.CurrentHP = FMath::Max(0.0f, RuntimeFramework.Stats.CurrentHP - ActualDamage);
+
+	UE_LOG(LogEOSCombat, Log, TEXT("[COMBAT] %s took %.1f damage from %s (Remaining HP: %.1f/%.1f)"),
+		*GetName(), ActualDamage, DamageCauser ? *DamageCauser->GetName() : TEXT("Unknown"),
+		RuntimeFramework.Stats.CurrentHP, RuntimeFramework.Stats.MaxHP);
+
+	return ActualDamage;
 }
 
 void AEOSCharacterBase::CastJutsuSlot(int32 SlotIndex)
 {
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
 	// Data-driven jutsu slot execution (GAS backed)
 	FString JutsuID;
 	float Cost = 25.0f;
@@ -481,6 +782,65 @@ void AEOSCharacterBase::CastJutsuSlot(int32 SlotIndex)
 		JutsuID = TEXT("JUTSU_NARUTO_SHADOW_CLONE"); // Slot 2: [E] Shadow Clone (CANON_VERIFIED)
 		Cost = 25.0f;
 		Damage = 160.0f;
+
+		// Spawn two tactical Shadow Clones
+		if (UWorld* World = GetWorld())
+		{
+			FActorSpawnParameters CloneSpawnParams;
+			CloneSpawnParams.Owner = this;
+			CloneSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+			const FVector LeftOffset = -GetActorRightVector() * 140.0f - GetActorForwardVector() * 80.0f;
+			const FVector RightOffset = GetActorRightVector() * 140.0f - GetActorForwardVector() * 80.0f;
+
+			AEOSShadowClone* Clone1 = World->SpawnActor<AEOSShadowClone>(
+				AEOSShadowClone::StaticClass(),
+				GetActorLocation() + LeftOffset,
+				GetActorRotation(),
+				CloneSpawnParams
+			);
+			if (Clone1)
+			{
+				Clone1->CloneIndex = 1;
+				Clone1->InitializeClone(this, LeftOffset);
+			}
+
+			AEOSShadowClone* Clone2 = World->SpawnActor<AEOSShadowClone>(
+				AEOSShadowClone::StaticClass(),
+				GetActorLocation() + RightOffset,
+				GetActorRotation(),
+				CloneSpawnParams
+			);
+			if (Clone2)
+			{
+				Clone2->CloneIndex = 2;
+				Clone2->InitializeClone(this, RightOffset);
+			}
+
+			// Dual target assignment: Clone 1 -> Melee Scout, Clone 2 -> Ranged Scout
+			TArray<AEOSMistScout*> Scouts;
+			for (TActorIterator<AEOSMistScout> It(World); It; ++It)
+			{
+				Scouts.Add(*It);
+			}
+
+			if (Scouts.Num() >= 2)
+			{
+				AEOSMistScout* MeleeScout = (Scouts[0]->GetScoutRole() == EEOSMistScoutRole::MeleeScout) ? Scouts[0] : Scouts[1];
+				AEOSMistScout* RangedScout = (Scouts[0]->GetScoutRole() == EEOSMistScoutRole::RangedScout) ? Scouts[0] : Scouts[1];
+				if (Clone1) Clone1->SetAssignedTarget(MeleeScout);
+				if (Clone2) Clone2->SetAssignedTarget(RangedScout);
+				UE_LOG(LogEOSCombat, Log, TEXT("[JUTSU] Shadow Clone tactical coordination: Clone 1 -> %s (Melee), Clone 2 -> %s (Ranged)"),
+					*MeleeScout->GetName(), *RangedScout->GetName());
+			}
+			else if (Scouts.Num() == 1)
+			{
+				if (Clone1) Clone1->SetAssignedTarget(Scouts[0]);
+				if (Clone2) Clone2->SetAssignedTarget(Scouts[0]);
+			}
+
+			UE_LOG(LogEOSCombat, Log, TEXT("[JUTSU] Cast Shadow Clone Jutsu (Kage Bunshin no Jutsu): 2 tactical clones spawned!"));
+		}
 		break;
 	case 2:
 		JutsuID = TEXT("JUTSU_NARUTO_UZUMAKI_BARRAGE"); // Slot 3: [R] Uzumaki Barrage (CANON_VERIFIED)
@@ -501,17 +861,22 @@ void AEOSCharacterBase::CastJutsuSlot(int32 SlotIndex)
 		{
 			AttributeSet->SetChakra(FMath::Max(0.0f, CurrentChakra - Cost));
 
-			// AOE damage in front
+			// AOE damage in front (deduplicated per actor so Rasengan increments hit count once per target)
 			const FVector Center = GetActorLocation() + (GetActorForwardVector() * 300.0f);
 			TArray<FHitResult> Hits;
+			TSet<AActor*> HitActors;
 			FCollisionShape Sphere = FCollisionShape::MakeSphere(250.0f);
 			if (GetWorld()->SweepMultiByChannel(Hits, Center, Center, FQuat::Identity, ECC_Pawn, Sphere))
 			{
+				const float JutsuHitStopDuration = (SlotIndex == 0) ? 0.18f : 0.10f;
+				const float KnockbackStrength = (SlotIndex == 0) ? 400.0f : 250.0f;
 				for (const FHitResult& Hit : Hits)
 				{
-					if (Hit.GetActor() && Hit.GetActor() != this)
+					AActor* Target = Hit.GetActor();
+					if (Target && Target != this && !HitActors.Contains(Target))
 					{
-						UGameplayStatics::ApplyDamage(Hit.GetActor(), Damage, GetController(), this, UDamageType::StaticClass());
+						HitActors.Add(Target);
+						ApplyImpactToTarget(this, Target, Damage, JutsuHitStopDuration, KnockbackStrength, 30.0f);
 					}
 				}
 			}
@@ -541,12 +906,22 @@ void AEOSCharacterBase::CastJutsu3()
 
 void AEOSCharacterBase::ToggleTransformation()
 {
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
 	const FString TargetForm = (RuntimeFramework.Forms.ActiveFormID == TEXT("FORM_BASE")) ? TEXT("FORM_SAGE_MODE") : TEXT("FORM_BASE");
 	TransformToForm(TargetForm);
 }
 
 void AEOSCharacterBase::CastUltimateAbility()
 {
+	if (AEOSPlayerController* PC = Cast<AEOSPlayerController>(GetController()))
+	{
+		if (PC->IsDialogueActive()) return;
+	}
+
 	// Ultimate: JUTSU_VERMILION_AWAKENING (ORIGINAL_GAME_VARIANT; CanonReference: NINE_TAILS_CHAKRA_MODE)
 	UE_LOG(LogEOSAbility, Log, TEXT("AEOSCharacterBase::CastUltimateAbility [JUTSU_VERMILION_AWAKENING] unsealed!"));
 
