@@ -1,5 +1,7 @@
 #include "../../Public/AI/EOSVillageNPC.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Engine/SkeletalMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -71,6 +73,16 @@ void AEOSVillageNPC::ApplyNPCTypeVisuals()
 		MeshPath = TEXT("/Game/Characters/NPCs/Students/Meshes/SK_AcademyStudent_Male");
 		MatPath = TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit");
 		break;
+	case EEOSNPCType::NamedShinobi:
+		if (bNeedsDefaultData)
+		{
+			NPCID = TEXT("NPC_HINATA_HYUGA");
+			NPCName = FText::FromString("Hinata Hyuga");
+			DialogueText = FText::FromString("N-Naruto-kun... please be careful. Zabuza of the Hidden Mist has been sighted in the outskirts.");
+		}
+		MeshPath = TEXT("/Game/Characters/Hinata/Meshes/SK_Hinata_Genin");
+		MatPath = TEXT("/Game/Characters/Naruto/Materials/MI_Naruto_Tracksuit");
+		break;
 	case EEOSNPCType::Villager:
 	default:
 		if (bNeedsDefaultData)
@@ -89,21 +101,34 @@ void AEOSVillageNPC::ApplyNPCTypeVisuals()
 		NPCVisualMeshComp = FindComponentByClass<UStaticMeshComponent>();
 	}
 
-	if (NPCVisualMeshComp)
+	// 1. Try static mesh assignment first
+	UStaticMesh* LoadedStaticMesh = LoadObject<UStaticMesh>(nullptr, *MeshPath);
+	if (LoadedStaticMesh && NPCVisualMeshComp)
 	{
-		UStaticMesh* LoadedMesh = LoadObject<UStaticMesh>(nullptr, *MeshPath);
-		if (LoadedMesh)
-		{
-			NPCVisualMeshComp->SetStaticMesh(LoadedMesh);
-			NPCVisualMeshComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
-			NPCVisualMeshComp->SetCastShadow(true);
-			NPCVisualMeshComp->SetVisibility(true);
+		NPCVisualMeshComp->SetStaticMesh(LoadedStaticMesh);
+		NPCVisualMeshComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
+		NPCVisualMeshComp->SetCastShadow(true);
+		NPCVisualMeshComp->SetVisibility(true);
 
-			UMaterialInterface* LoadedMat = LoadObject<UMaterialInterface>(nullptr, *MatPath);
-			if (LoadedMat)
-			{
-				NPCVisualMeshComp->SetMaterial(0, LoadedMat);
-			}
+		UMaterialInterface* LoadedMat = LoadObject<UMaterialInterface>(nullptr, *MatPath);
+		if (LoadedMat)
+		{
+			NPCVisualMeshComp->SetMaterial(0, LoadedMat);
+		}
+	}
+	// 2. Fall back to Skeletal Mesh assignment on Character GetMesh() (e.g. SK_Hinata_Genin)
+	else if (USkeletalMesh* LoadedSkelMesh = LoadObject<USkeletalMesh>(nullptr, *MeshPath))
+	{
+		if (GetMesh())
+		{
+			GetMesh()->SetSkeletalMeshAsset(LoadedSkelMesh);
+			GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FRotator(0.0f, -90.0f, 0.0f));
+			GetMesh()->SetVisibility(true);
+			GetMesh()->SetCastShadow(true);
+		}
+		if (NPCVisualMeshComp)
+		{
+			NPCVisualMeshComp->SetVisibility(false);
 		}
 	}
 }
@@ -181,6 +206,11 @@ FString AEOSVillageNPC::Interact(AActor* Interactor)
 {
 	UE_LOG(LogEOSCore, Log, TEXT("NPC Interaction triggered with %s (%s): %s"),
 		*NPCID, *NPCName.ToString(), *DialogueText.ToString());
+
+	if (NPCID == TEXT("NPC_HINATA_HYUGA") || NPCType == EEOSNPCType::NamedShinobi)
+	{
+		return TEXT("QUEST_HINATA_OUTSKIRTS_INVESTIGATION");
+	}
 
 	return ResolveInteractionForType(NPCType);
 }

@@ -34,6 +34,13 @@ void AEOSShinobiHUD::SetTargetBossInfo(const FString& InBossName, float InHealth
 	bHasActiveTarget = true;
 }
 
+void AEOSShinobiHUD::ClearTargetBossInfo()
+{
+	ActiveTargetName.Empty();
+	ActiveTargetHealthPercent = 0.0f;
+	bHasActiveTarget = false;
+}
+
 void AEOSShinobiHUD::SetBossPhaseInfo(int32 CurrentPhase, int32 TotalPhases, float StaggerPercent, bool bIsStaggered)
 {
 	BossCurrentPhase = CurrentPhase;
@@ -117,6 +124,20 @@ void AEOSShinobiHUD::ApplyBossViewModel(const FEOSBossHUDViewModel& InViewModel)
 	bHasActiveTarget = true;
 }
 
+void AEOSShinobiHUD::ShowDialogueBox(const FText& InSpeakerName, const FText& InPromptText, const TArray<FString>& InChoices)
+{
+	DialogueSpeakerName = InSpeakerName;
+	DialoguePromptText = InPromptText;
+	DialogueChoiceTexts = InChoices;
+	bIsDialogueActive = true;
+}
+
+void AEOSShinobiHUD::HideDialogueBox()
+{
+	bIsDialogueActive = false;
+	DialogueChoiceTexts.Empty();
+}
+
 void AEOSShinobiHUD::DrawAnimePanel(float X, float Y, float W, float H, const FLinearColor& BgColor, const FLinearColor& BorderColor, float BorderThickness)
 {
 	DrawRect(BgColor, X, Y, W, H);
@@ -151,6 +172,8 @@ void AEOSShinobiHUD::DrawHUD()
 		{
 			CurrentComboHits = 0;
 			CurrentComboScore = 0.0f;
+			StyleRank = TEXT("C");
+			UE_LOG(LogEOSCombat, Log, TEXT("[COMBO] 3.5s decay window expired -> Reset Hits=0, Rank=C"));
 		}
 	}
 
@@ -189,6 +212,12 @@ void AEOSShinobiHUD::DrawHUD()
 
 	// 9. Upper-Center Cinematic Jutsu / Awakening Banner
 	DrawJutsuBanner(ScreenW, ScreenH);
+
+	// 10. Narrative Dialogue Panel & Choice Selection (consumes input when active)
+	if (bIsDialogueActive)
+	{
+		DrawDialogueBox(ScreenW, ScreenH);
+	}
 }
 
 void AEOSShinobiHUD::DrawTargetBossBar(float ScreenW, float ScreenH)
@@ -448,7 +477,15 @@ void AEOSShinobiHUD::DrawDataDrivenMinimap(float ScreenW, float ScreenH, AEOSCha
 
 void AEOSShinobiHUD::DrawMissionTracker(float ScreenW, float ScreenH)
 {
-	const float PanelW = 230.0f;
+	float TitleW = 0.0f, TitleH = 0.0f;
+	float ObjW = 0.0f, ObjH = 0.0f;
+	float ProgW = 0.0f, ProgH = 0.0f;
+	GetTextSize(ActiveMissionTitle, TitleW, TitleH);
+	GetTextSize(ActiveMissionObjective, ObjW, ObjH);
+	GetTextSize(ActiveMissionProgress, ProgW, ProgH);
+
+	const float MaxTextW = FMath::Max3(TitleW, ObjW, ProgW);
+	const float PanelW = FMath::Clamp(MaxTextW + 36.0f, 260.0f, 440.0f);
 	const float PanelH = 74.0f;
 	const float X = ScreenW - PanelW - 20.0f;
 	const float Y = 175.0f;
@@ -566,25 +603,34 @@ void AEOSShinobiHUD::DrawJutsuAndUltimateSlots(float ScreenW, float ScreenH, AEO
 
 void AEOSShinobiHUD::DrawComboDisplay(float ScreenW, float ScreenH)
 {
-	const float X = ScreenW - 200.0f;
+	if (CurrentComboHits <= 0)
+	{
+		return; // Return cleanly to initial pre-combat state when 0 hits
+	}
+
+	const float X = ScreenW - 220.0f;
 	const float Y = ScreenH * 0.38f;
 
-	int32 DisplayHits = CurrentComboHits > 0 ? CurrentComboHits : 12;
-
-	// Dynamic Comic Calligraphy "12 HITS!" in fiery anime gold-orange
-	// Drop shadow
-	DrawText(FString::Printf(TEXT("%d HITS!"), DisplayHits),
+	// Dynamic Comic Calligraphy "%d HITS!" in fiery anime gold-orange
+	DrawText(FString::Printf(TEXT("%d HITS!"), CurrentComboHits),
 		FLinearColor(0.08f, 0.02f, 0.02f, 0.95f * HUDOpacity), X + 2.0f, Y + 2.0f, nullptr, 2.0f);
-	DrawText(FString::Printf(TEXT("%d HITS!"), DisplayHits),
+	DrawText(FString::Printf(TEXT("%d HITS!"), CurrentComboHits),
 		FLinearColor(1.0f, 0.58f, 0.08f, HUDOpacity), X, Y, nullptr, 2.0f);
 
-	// "COMBO!" directly below
-	DrawText(TEXT("COMBO!"), FLinearColor(0.08f, 0.02f, 0.02f, 0.95f * HUDOpacity), X + 6.0f, Y + 28.0f, nullptr, 1.4f);
-	DrawText(TEXT("COMBO!"), FLinearColor(1.0f, 0.98f, 0.95f, HUDOpacity), X + 5.0f, Y + 27.0f, nullptr, 1.4f);
+	// "COMBO!" + live Style Rank ("C", "B", "A", "S") directly below
+	const FString RankLine = FString::Printf(TEXT("COMBO!  RANK [%s]"), *StyleRank);
+	DrawText(RankLine, FLinearColor(0.08f, 0.02f, 0.02f, 0.95f * HUDOpacity), X + 4.0f, Y + 30.0f, nullptr, 1.3f);
+	DrawText(RankLine, FLinearColor(1.0f, 0.98f, 0.95f, HUDOpacity), X + 3.0f, Y + 29.0f, nullptr, 1.3f);
 }
 
 void AEOSShinobiHUD::DrawContextualInteractionPrompt(float ScreenW, float ScreenH, AEOSCharacterBase* Shinobi)
 {
+	// Suppress prompt when dialogue box is actively consuming interaction
+	if (bIsDialogueActive)
+	{
+		return;
+	}
+
 	FString PromptText;
 	bool bShouldShow = bShowInteractionPrompt;
 
@@ -611,6 +657,10 @@ void AEOSShinobiHUD::DrawContextualInteractionPrompt(float ScreenW, float Screen
 				if (NPC->NPCType == EEOSNPCType::Shopkeeper)
 				{
 					PromptText = TEXT("[F] TALK — Teuchi (Ichiraku Ramen)");
+				}
+				else if (NPC->NPCID == TEXT("NPC_HINATA_HYUGA") || NPC->NPCType == EEOSNPCType::NamedShinobi)
+				{
+					PromptText = TEXT("[F] TALK — Hinata Hyuga");
 				}
 				else if (NPC->NPCType == EEOSNPCType::ChuninGuard)
 				{
@@ -689,4 +739,80 @@ void AEOSShinobiHUD::DrawJutsuBanner(float ScreenW, float ScreenH)
 	FString FormattedText = FString::Printf(TEXT("✦ %s ✦"), *ActiveBannerText);
 	DrawText(FormattedText, FLinearColor(1.0f, 0.88f, 0.25f, BannerAlpha), BannerX + 60.0f, BannerY + 12.0f);
 }
+
+void AEOSShinobiHUD::DrawDialogueBox(float ScreenW, float ScreenH)
+{
+	const float BoxW = FMath::Clamp(ScreenW * 0.58f, 760.0f, 1020.0f);
+	const float BoxH = 170.0f;
+	const float BoxX = (ScreenW - BoxW) * 0.5f;
+	const float BoxY = ScreenH - BoxH - 40.0f; // Sits above the screen edge safely inside 1920x1080
+
+	// 1. Semi-translucent dark slate anime panel with golden border
+	DrawAnimePanel(BoxX, BoxY, BoxW, BoxH,
+		FLinearColor(0.015f, 0.02f, 0.04f, 0.92f * HUDOpacity),
+		FLinearColor(0.95f, 0.75f, 0.20f, 0.95f * HUDOpacity), 2.0f);
+
+	// 2. Speaker Name Header Pill
+	const float NameW = 200.0f;
+	const float NameH = 26.0f;
+	const float NameX = BoxX + 24.0f;
+	const float NameY = BoxY - 14.0f;
+	DrawAnimePanel(NameX, NameY, NameW, NameH,
+		FLinearColor(0.95f, 0.70f, 0.15f, 0.95f * HUDOpacity),
+		FLinearColor::White, 1.5f);
+	FString SpeakerStr = DialogueSpeakerName.IsEmpty() ? TEXT("Hinata Hyuga") : DialogueSpeakerName.ToString();
+	DrawText(SpeakerStr, FLinearColor(0.02f, 0.02f, 0.02f, 1.0f), NameX + 12.0f, NameY + 5.0f);
+
+	// 3. Prompt Text with word wrap / safe character split to guarantee safe rendering inside 1920x1080
+	FString PromptStr = DialoguePromptText.IsEmpty() ? TEXT("Naruto-kun... please be careful in the outskirts.") : DialoguePromptText.ToString();
+	const int32 MaxLineChars = 72;
+	float TextY = BoxY + 22.0f;
+	while (!PromptStr.IsEmpty())
+	{
+		FString Line;
+		if (PromptStr.Len() <= MaxLineChars)
+		{
+			Line = PromptStr;
+			PromptStr.Empty();
+		}
+		else
+		{
+			int32 SplitIdx = PromptStr.Find(TEXT(" "), ESearchCase::IgnoreCase, ESearchDir::FromEnd, MaxLineChars);
+			if (SplitIdx <= 0) SplitIdx = MaxLineChars;
+			Line = PromptStr.Left(SplitIdx);
+			PromptStr = PromptStr.Mid(SplitIdx).TrimStart();
+		}
+		DrawText(Line, FLinearColor(0.95f, 0.95f, 0.95f, HUDOpacity), BoxX + 24.0f, TextY);
+		TextY += 18.0f;
+	}
+
+	// 4. Choices rendered as distinct interactive options with [1] and [2] key badges
+	const float ChoiceY = BoxY + BoxH - 46.0f;
+	const float ChoiceH = 34.0f;
+	const int32 NumChoices = FMath::Min(DialogueChoiceTexts.Num(), 2);
+	const float ChoiceW = (BoxW - 48.0f - (NumChoices > 1 ? 16.0f : 0.0f)) / (NumChoices > 0 ? NumChoices : 1);
+
+	for (int32 i = 0; i < NumChoices; ++i)
+	{
+		const float CX = BoxX + 24.0f + i * (ChoiceW + 16.0f);
+		DrawAnimePanel(CX, ChoiceY, ChoiceW, ChoiceH,
+			FLinearColor(0.05f, 0.08f, 0.14f, 0.88f * HUDOpacity),
+			(i == 0) ? FLinearColor(0.95f, 0.75f, 0.20f, 0.85f * HUDOpacity) : FLinearColor(0.60f, 0.65f, 0.75f, 0.65f * HUDOpacity), 1.5f);
+
+		// Key badge
+		DrawAnimePanel(CX + 6.0f, ChoiceY + 5.0f, 24.0f, 24.0f,
+			(i == 0) ? FLinearColor(0.95f, 0.75f, 0.20f, HUDOpacity) : FLinearColor(0.60f, 0.65f, 0.75f, HUDOpacity),
+			FLinearColor::White, 1.0f);
+		DrawText(FString::Printf(TEXT("%d"), i + 1), FLinearColor::Black, CX + 14.0f, ChoiceY + 8.0f);
+
+		// Choice Label
+		FString ChoiceText = DialogueChoiceTexts[i];
+		if (ChoiceText.Len() > 42)
+		{
+			ChoiceText = ChoiceText.Left(39) + TEXT("...");
+		}
+		DrawText(ChoiceText, FLinearColor::White, CX + 36.0f, ChoiceY + 8.0f);
+	}
+}
+
 

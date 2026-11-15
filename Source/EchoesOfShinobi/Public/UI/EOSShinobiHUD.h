@@ -34,6 +34,9 @@ public:
 	void SetTargetBossInfo(const FString& InBossName, float InHealthPercent);
 
 	UFUNCTION(BlueprintCallable, Category = "EOS|UI")
+	void ClearTargetBossInfo();
+
+	UFUNCTION(BlueprintCallable, Category = "EOS|UI")
 	void SetBossPhaseInfo(int32 CurrentPhase, int32 TotalPhases, float StaggerPercent, bool bIsStaggered);
 
 	UFUNCTION(BlueprintCallable, Category = "EOS|UI")
@@ -45,6 +48,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "EOS|UI")
 	FString GetCurrentStyleRank() const;
+
+	UFUNCTION(BlueprintPure, Category = "EOS|UI")
+	int32 GetCurrentComboHits() const { return CurrentComboHits; }
 
 	// Contextual Interaction Prompt
 	UFUNCTION(BlueprintCallable, Category = "EOS|UI")
@@ -64,6 +70,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "EOS|UI")
 	void ApplyBossViewModel(const FEOSBossHUDViewModel& InViewModel);
+
+	// Narrative Dialogue Panel
+	UFUNCTION(BlueprintCallable, Category = "EOS|UI|Dialogue")
+	void ShowDialogueBox(const FText& InSpeakerName, const FText& InPromptText, const TArray<FString>& InChoices);
+
+	UFUNCTION(BlueprintCallable, Category = "EOS|UI|Dialogue")
+	void HideDialogueBox();
+
+	UFUNCTION(BlueprintPure, Category = "EOS|UI|Dialogue")
+	bool IsDialogueActive() const { return bIsDialogueActive; }
 
 	// HUD Visibility / Presentation fade
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|UI")
@@ -123,6 +139,20 @@ protected:
 	void DrawMissionTracker(float ScreenW, float ScreenH);
 	void DrawContextualInteractionPrompt(float ScreenW, float ScreenH, AEOSCharacterBase* Shinobi);
 	void DrawJutsuBanner(float ScreenW, float ScreenH);
+	void DrawDialogueBox(float ScreenW, float ScreenH);
+
+	// Dialogue State
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|UI|Dialogue")
+	bool bIsDialogueActive = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|UI|Dialogue")
+	FText DialogueSpeakerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|UI|Dialogue")
+	FText DialoguePromptText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EOS|UI|Dialogue")
+	TArray<FString> DialogueChoiceTexts;
 
 	void DrawAnimePanel(float X, float Y, float W, float H, const FLinearColor& BgColor, const FLinearColor& BorderColor, float BorderThickness = 1.5f);
 

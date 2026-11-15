@@ -23,7 +23,8 @@ enum class EEOSCameraMode : uint8
 	Jutsu         UMETA(DisplayName = "Jutsu Dynamic Camera"),
 	Ultimate      UMETA(DisplayName = "Ultimate Cinematic Camera"),
 	Dialogue      UMETA(DisplayName = "Dialogue Camera"),
-	MotionManga   UMETA(DisplayName = "Motion Manga Parallax Camera")
+	MotionManga   UMETA(DisplayName = "Motion Manga Parallax Camera"),
+	ArtReview     UMETA(DisplayName = "Art Review Camera (CAM_A)")
 };
 
 /**
@@ -62,52 +63,69 @@ struct ECHOESOFSHINOBI_API FEOSCameraProfile
 		switch (InMode)
 		{
 		case EEOSCameraMode::Exploration:
-			TargetArmLength = 460.0f;
-			SocketOffset = FVector(0.0f, 0.0f, 75.0f);
+			TargetArmLength = 410.0f;
+			SocketOffset = FVector(0.0f, 0.0f, 35.0f);
 			FieldOfView = 68.0f;
 			CameraLagSpeed = 12.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::Combat:
-			TargetArmLength = 320.0f;
-			SocketOffset = FVector(0.0f, 45.0f, 55.0f);
-			FieldOfView = 85.0f;
+			TargetArmLength = 460.0f;
+			SocketOffset = FVector(0.0f, 0.0f, 40.0f);
+			FieldOfView = 75.0f;
 			CameraLagSpeed = 16.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::LockOn:
-			TargetArmLength = 340.0f;
-			SocketOffset = FVector(0.0f, 50.0f, 60.0f);
-			FieldOfView = 82.0f;
+			TargetArmLength = 420.0f;
+			SocketOffset = FVector(0.0f, 50.0f, 70.0f);
+			FieldOfView = 78.0f;
 			CameraLagSpeed = 18.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::Boss:
-			TargetArmLength = 520.0f;
-			SocketOffset = FVector(0.0f, 20.0f, 90.0f);
-			FieldOfView = 90.0f;
+			TargetArmLength = 540.0f;
+			SocketOffset = FVector(0.0f, 30.0f, 85.0f);
+			FieldOfView = 80.0f;
 			CameraLagSpeed = 10.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::Jutsu:
-			TargetArmLength = 260.0f;
-			SocketOffset = FVector(20.0f, 40.0f, 45.0f);
-			FieldOfView = 88.0f;
+			TargetArmLength = 320.0f;
+			SocketOffset = FVector(20.0f, 40.0f, 55.0f);
+			FieldOfView = 82.0f;
 			CameraLagSpeed = 22.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::Ultimate:
-			TargetArmLength = 200.0f;
-			SocketOffset = FVector(10.0f, 25.0f, 35.0f);
+			TargetArmLength = 240.0f;
+			SocketOffset = FVector(10.0f, 25.0f, 45.0f);
 			FieldOfView = 75.0f;
 			CameraLagSpeed = 25.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::Dialogue:
-			TargetArmLength = 180.0f;
-			SocketOffset = FVector(0.0f, 30.0f, 50.0f);
-			FieldOfView = 70.0f;
+			TargetArmLength = 340.0f;
+			SocketOffset = FVector(0.0f, 0.0f, 35.0f);
+			FieldOfView = 72.0f;
 			CameraLagSpeed = 8.0f;
+			bEnableCameraLag = true;
 			break;
 		case EEOSCameraMode::MotionManga:
 			TargetArmLength = 400.0f;
 			SocketOffset = FVector(0.0f, 0.0f, 50.0f);
 			FieldOfView = 75.0f;
 			CameraLagSpeed = 6.0f;
+			bEnableCameraLag = true;
+			break;
+		case EEOSCameraMode::ArtReview:
+			// Fixed Art-Review Camera Profile (CAM_A - Konoha Golden Street reference inspection)
+			TargetArmLength = 420.0f;
+			SocketOffset = FVector(0.0f, 0.0f, 50.0f);
+			FieldOfView = 75.0f;
+			CameraLagSpeed = 0.0f;
+			bEnableCameraLag = false;
+			TargetHeightScreenFraction = 0.28f;
 			break;
 		default:
 			break;
